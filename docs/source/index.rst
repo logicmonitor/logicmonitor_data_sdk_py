@@ -45,11 +45,11 @@ Github
 
 .. code:: sh
 
-    pip install git+https://github.com/logicmonitor/logicmonitor_api_sdk_py.git
+    pip install logicmonitor_api_sdk_py
 
 | (you may need to run ``pip`` with root permission:
 
-``sudo pip install git+https://github.com/logicmonitor/logicmonitor_api_sdk_py.git``)
+``sudo pip install logicmonitor_api_sdk_py``)
 
 Then import the package:
 
@@ -123,8 +123,8 @@ Metrics Ingestion API
    :members:
 
 
-Documentation For Models
-****************************************
+Models
+******
 
 Resource
 ==========
@@ -155,21 +155,6 @@ ResonseInterface
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
-TODO
-****
-
--  [X] Exception Handling, passing any error to end user when ever he
-   makes a Send request for that resource. e.g. SendMetrics is invoked against the resources which are not present
--  [X] Supporting the single request
--  [X] Validation all the models. e.g. no specical chars allowed in the resource name, length restriction...etc
--  [X] Property Updation API
--  [] Send\* call using the unique name
--  [X] Code commenting for code documentation
--  [] Any other authentication support
--  [] version/Compression support in send\* call
--  [] Test cases and sample program.
 
 
 .. |ss| raw:: html

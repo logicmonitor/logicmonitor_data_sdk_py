@@ -83,7 +83,7 @@ class Metrics(BatchingCache):
       >>> instance = DataSourceInstance(name="CPU-0")
       >>> # Create the DataPoint object for cpu-time
       >>> dp = DataPoint(name='cpu_time', aggregation_type='sum')
-      >>> metric_api.SendMetrics(resource=resource, datasource=ds, instance=instance, \
+      >>> metric_api.send_metrics(resource=resource, datasource=ds, instance=instance, \
 datapoint=dp, values={ time.time() : '23'})
     """
     all_params = ['resource', 'datasource', 'instance', 'datapoint',
@@ -117,17 +117,17 @@ datapoint=dp, values={ time.time() : '23'})
 
   def update_resource_property(self, resource_ids, resource_properties,
       patch=True):  # noqa: E501
-    """
-    This update_resource_property method is used to update the property of the resource.
+    #
+    # This update_resource_property method is used to update the property of the resource.
 
-    Args:
-        resource_ids (dict): The Resource ids.
-        resource_properties (dict): The properties which you want to add/update.
-        patch (bool): PATCH or PUT request.
+    # Args:
+    #    resource_ids (dict): The Resource ids.
+    #    resource_properties (dict): The properties which you want to add/update.
+    #    patch (bool): PATCH or PUT request.
 
-    Return:
-        REST response will be return.
-    """
+    # Return:
+    #    REST response will be return.
+    #
     if not resource_ids or not isinstance(resource_ids, dict):
       raise ValueError(
           'resourceId must provide and it should be type `dict`'
@@ -153,19 +153,19 @@ datapoint=dp, values={ time.time() : '23'})
 
   def update_instance_property(self, resource_ids, datasource, instancename,
       instance_properties, patch=True):  # noqa: E501
-    """
-    This update_resource_property method is used to update the property of the resource.
+    #
+    # This update_resource_property method is used to update the property of the resource.
 
-    Args:
-        resource_ids (dict): The Resource ids.
-        datasource (str): The datasource name.
-        instancename (str): The instance name.
-        instance_properties (dict): The properties which you want to add/update.
-        patch (bool): PATCH or PUT request.
+    # Args:
+    #    resource_ids (dict): The Resource ids.
+    #    datasource (str): The datasource name.
+    #    instancename (str): The instance name.
+    #    instance_properties (dict): The properties which you want to add/update.
+    #    patch (bool): PATCH or PUT request.
 
-    Return:
-        REST response will be return.
-    """
+    # Return:
+    #    REST response will be return.
+
     if not resource_ids or not isinstance(resource_ids, dict):
       raise ValueError(
           'resourceId must provide and it should be type `dict`'
