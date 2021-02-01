@@ -86,7 +86,7 @@ interval.
         partitions = psutil.disk_partitions()
         for p in partitions:
           instance_name = p.device
-          usage = psutil.disk_usage(instance_name).__dict__
+          usage = psutil.disk_usage(instance_name)._asdict()
           # Create the instance object for every device. Name should not have the
           # special characters so replacing it with the '-'.
           instance = DataSourceInstance(name=instance_name.replace('/', '-'),

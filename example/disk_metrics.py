@@ -1,17 +1,14 @@
 import logging
 import os
-import sys
 import time
 
 import psutil as psutil
 
-sys.path.append("..")
 import logicmonitor_api_sdk
+from logicmonitor_api_sdk.api.metrics import Metrics
 from logicmonitor_api_sdk.api.response_interface import ResonseInterface
 from logicmonitor_api_sdk.models import Resource, DataSource, DataPoint, \
   DataSourceInstance
-
-from logicmonitor_api_sdk.api.metrics import Metrics
 
 logger = logging.getLogger('lmingest.api')
 logger.setLevel(logging.INFO)
@@ -48,7 +45,7 @@ def MetricRequest():
     for p in partitions:
       # Using the device as instance name. We can use the mountpoint as well.
       instance_name = p.device
-      usage = psutil.disk_usage(instance_name).__dict__
+      usage = psutil.disk_usage(instance_name)._asdict()
       # Create the instance object for every device. Name should not have the
       # special characters so replacing it with the '-'.
       instance = DataSourceInstance(name=instance_name.replace('/', '-'),
