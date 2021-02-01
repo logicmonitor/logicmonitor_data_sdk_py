@@ -24,3 +24,4 @@ from logicmonitor_api_sdk.models.rest_instance_properties_v1 import \
 from logicmonitor_api_sdk.models.rest_metrics_v1 import RestMetricsV1
 from logicmonitor_api_sdk.models.rest_resource_properties_v1 import \
   RestResourcePropertiesV1
+from logicmonitor_api_sdk.version import __version__

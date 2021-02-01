@@ -17,13 +17,16 @@ sys.path.insert(0, os.path.abspath('../..'))
 sys.setrecursionlimit(1500)
 
 # -- Project information -----------------------------------------------------
+_version = {}
+with open("../../logicmonitor_api_sdk/version.py") as fp:
+  exec(fp.read(), _version)
 
 project = 'LogicMonitor API SDK Python'
 copyright = '2021, Logicmonitor'
 author = 'Logicmonitor'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = str(_version["__version__"])
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,7 +34,7 @@ release = '0.0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 # extensions = ['rinoh.frontend.sphinx', 'sphinx.ext.autodoc', 'sphinx_markdown_builder']
-extensions = ['sphinx.ext.napoleon', 'sphinx.ext.autosectionlabel']
+extensions = ['sphinx.ext.napoleon', 'sphinx.ext.autosectionlabel', ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

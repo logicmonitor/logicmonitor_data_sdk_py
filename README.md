@@ -25,43 +25,98 @@ Requirements.
 
 Python 2.7 and 3.4+
 
+Documentation
+-------------
+https://logicmonitor-api-sdk-py.readthedocs.io/en/latest/
+
+
 Getting Started
 ---------------
 
-Please install using pip and then run below a working example for submitting the metrics to your account:
+Please install using pip and then run below a working example for submitting the disk metrics to 
+your LM account. This script will monitor the Usage, Free and Total of the disk at every 10 sec 
+interval.
+
+```python
+    import logging
+    import os
+    import sys
+    import time
+    
+    import psutil as psutil
+    
+    import logicmonitor_api_sdk
+    from logicmonitor_api_sdk.api.response_interface import ResonseInterface
+    from logicmonitor_api_sdk.models import Resource, DataSource, DataPoint, \
+      DataSourceInstance
+    
+    from logicmonitor_api_sdk.api.metrics import Metrics
+    
+    logger = logging.getLogger('lmingest.api')
+    logger.setLevel(logging.INFO)
+    
+    configuration = logicmonitor_api_sdk.Configuration()
+    # For debug log, set the value to True
+    configuration.debug = True
+    
+    
+    class MyResponse(ResonseInterface):
+      """
+      Sample callback to handle the response from the REST endpoints
+      """
+    
+      def success_callback(self, request, response, status, request_id):
+        logger.info("%s: %s: %s", response, status, request_id)
+    
+      def error_callback(self, request, response, status, request_id, reason):
+        logger.error("%s: %s: %s %s", response, status, reason, request_id)
+    
+    
+    def MetricRequest():
+      """
+      Main function to get the CPU values using `psutil` and send to Metrics REST endpoint
+      """
+      device_name = os.uname()[1]
+      resource = Resource(ids={'system.displayname': device_name}, name=device_name,
+                          create=True)
+      datasource = DataSource(name="DiskUsingSDK")
+      datapoints = ['total', 'used', 'free']
+      metric_api = Metrics(batch=True, interval=10, response_callback=MyResponse())
+      while True:
+        partitions = psutil.disk_partitions()
+        for p in partitions:
+          instance_name = p.device
+          usage = psutil.disk_usage(instance_name).__dict__
+          # Create the instance object for every device. Name should not have the
+          # special characters so replacing it with the '-'.
+          instance = DataSourceInstance(name=instance_name.replace('/', '-'),
+                                        display_name=instance_name)
+          for one_datapoint in datapoints:
+            datapoint = DataPoint(name=one_datapoint)
+            values = {str(int(time.time())): str(usage[one_datapoint])}
+            metric_api.send_metrics(resource=resource,
+                                    datasource=datasource,
+                                    instance=instance,
+                                    datapoint=datapoint,
+                                    values=values)
+        time.sleep(10)
+    
+    
+    if __name__ == "__main__":
+      MetricRequest()
+
+```
+
+Then run the program as:
 
 ```python
 
-    from __future__ import print_function
-    import time
-    import random
-    import logicmonitor_api_sdk
-
-    from logicmonitor_api_sdk.api.metrics import Metrics
-    from logicmonitor_api_sdk.models.resource import Resource
-    from logicmonitor_api_sdk.models.datasource import DataSource
-    from logicmonitor_api_sdk.models.datasource_instance import DataSourceInstance
-    from logicmonitor_api_sdk.models.datapoint import DataPoint
-
-    # Configure API key authorization: LMv1
-    configuration = logicmonitor_api_sdk.Configuration(company = 'YOUR_COMPANY', authentication={ 'id': 'YOUR_ACCESS_ID', 'key' : 'YOUR_ACCESS_KEY'})
-
-    # create an instance of the API class
-    metric_api = Metrics(interval=20, batch = True)
-    resource = Resource(ids={"system.hostname": "SampleDevice"}, create=True, name="SampleDevice", properties={'using.sdk': 'true'})
-    ds = DataSource(name="DSName")
-    instance = DataSourceInstance(name="instance")
-    dp = DataPoint(name="dataPoint")
-
-    while True:
-      # Generate the random data for current epoch.
-      values = {str(int(time.time())): random.randint(10, 100)}
-      metric_api.send_metrics(resource=resource,
-                          datasource=ds,
-                          instance=instance,
-                          datapoint=dp,
-                          values=values)
-      time.sleep(10)
+    pip install psutil
+    LM_COMPANY=<ACOUNT_NAME> LM_ACCESS_ID=<ID> LM_ACCESS_KEY='<KEY>' python disk_metrics.py
 ```
 
 
+Get in Touch
+------------
+
+If you'd like to suggest a feature or report a bug, please add an issue `here <https://github.com/logicmonitor/logicmonitor_api_sdk_py/issues>`_.

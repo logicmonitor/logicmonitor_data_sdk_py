@@ -6,10 +6,12 @@ import copy
 import logging
 import multiprocessing
 import os
-import sys
+import platform
 
 import six
 from six.moves import http_client as httplib
+
+from logicmonitor_api_sdk.version import __version__
 
 
 # logging.basicConfig()
@@ -284,9 +286,9 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
 
     :return: The report for debugging.
     """
-    return "Python SDK Debug Report:\n" \
-           "OS: {env}\n" \
-           "Python Version: {pyversion}\n" \
-           "Version of the API: 0.0.1\n" \
-           "SDK Package Version: 0.0.1". \
-      format(env=sys.platform, pyversion=sys.version)
+    return 'Python SDK Debug Report {version} (python {pyver}; os {os}; arch {arch})'.format(
+        version=__version__,
+        pyver=platform.python_version(),
+        os=platform.system().lower(),
+        arch=platform.machine().lower(),
+    )

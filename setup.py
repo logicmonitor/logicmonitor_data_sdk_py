@@ -1,9 +1,8 @@
 # coding: utf-8
 
-from setuptools import setup  # noqa: H301
+from setuptools import setup, find_packages  # noqa: H301
 
 NAME = "logicmonitor_api_sdk"
-VERSION = "0.0.1b1"
 # To install the library, run the following
 #
 # python setup.py install
@@ -15,9 +14,13 @@ REQUIRES = ["urllib3 >= 1.15", "six >= 1.10", "certifi", "python-dateutil"]
 with open("README.md", "r", encoding="utf-8") as fh:
   long_description = fh.read()
 
+version = {}
+with open("logicmonitor_api_sdk/version.py") as fp:
+  exec(fp.read(), version)
+
 setup(
     name=NAME,
-    version=VERSION,
+    version=version["__version__"],
     description="LogicMonitor API-Ingest Rest API",
     author="LogicMonitor",
     author_email="support@logicmonitor.com",
@@ -38,5 +41,7 @@ setup(
       # 'Source': 'https://github.com/logicmonitor/logicmonitor_api_sdk_py',
       'Tracker': 'https://github.com/logicmonitor/logicmonitor_api_sdk_py/issues',
     },
+    packages=find_packages(),
+    install_requires=REQUIRES,
 
 )

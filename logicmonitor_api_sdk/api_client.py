@@ -10,6 +10,7 @@ import json
 import logging
 import mimetypes
 import os
+import platform
 import re
 import tempfile
 import time
@@ -23,6 +24,7 @@ from six.moves.urllib.parse import unquote
 import logicmonitor_api_sdk.models
 from logicmonitor_api_sdk import rest
 from logicmonitor_api_sdk.configuration import Configuration
+from logicmonitor_api_sdk.version import __version__
 
 logger = logging.getLogger('lmingest.api')
 
@@ -68,7 +70,12 @@ class ApiClient(object):
       self.default_headers[header_name] = header_value
     self.cookie = cookie
     # Set default User-Agent.
-    self.user_agent = 'LMIngestSDK/0.0.1/python'
+    self.user_agent = 'logicmonitor_api_sdk/{version} (python {pyver}; os {os}; arch {arch})'.format(
+        version=__version__,
+        pyver=platform.python_version(),
+        os=platform.system().lower(),
+        arch=platform.machine().lower(),
+    )
 
   def __del__(self):
     self.pool.close()
@@ -76,7 +83,8 @@ class ApiClient(object):
 
   @property
   def user_agent(self):
-    """User agent for this API client. Default value is "LMIngestSDK/0.0.1/python"
+    """User agent for this API client. Default value is
+    "logicmonitor_api_sdk/{version} (python {pyver}; os {os}; arch {arch})"
 
     :return: The type of User-Agent.
     :rtype: str
@@ -96,7 +104,6 @@ class ApiClient(object):
       files=None, response_type=None, auth_settings=None,
       _return_http_data_only=None, collection_formats=None,
       _preload_content=True, _request_timeout=None):
-
     config = self.configuration
 
     # header parameters

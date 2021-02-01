@@ -21,11 +21,6 @@ alerting.
 More details are available on `support
 site <https://www.logicmonitor.com/support>`__
 
-Version
-*******
-
--  API version: 0.0.1
--  Package version: 0.0.1.beta
 
 Requirements.
 *************
@@ -45,11 +40,11 @@ Github
 
 .. code:: sh
 
-    pip install logicmonitor_api_sdk_py
+    pip install logicmonitor_api_sdk
 
 | (you may need to run ``pip`` with root permission:
 
-``sudo pip install logicmonitor_api_sdk_py``)
+``sudo pip install logicmonitor_api_sdk``)
 
 Then import the package:
 
@@ -61,39 +56,19 @@ Then import the package:
 Getting Started
 ***************
 
-Please follow the :ref:`RST Installation` and then run below a working example for submitting the metrics to your account:
+Please follow the :ref:`RST Installation` and then run below a working example for submitting the disk
+metrics to your LM account. This script will monitor the Usage, Free and Total of the disk at
+every 10 sec interval.
+
+.. literalinclude:: ../../example/disk_metrics.py
+  :language: python
+
+Then run the program as:
 
 .. code:: python
 
-    from __future__ import print_function
-    import time
-    import random
-    import logicmonitor_api_sdk
-
-    from logicmonitor_api_sdk.api.metrics import Metrics
-    from logicmonitor_api_sdk.models.resource import Resource
-    from logicmonitor_api_sdk.models.datasource import DataSource
-    from logicmonitor_api_sdk.models.datasource_instance import DataSourceInstance
-    from logicmonitor_api_sdk.models.datapoint import DataPoint
-
-    # Configure API key authorization: LMv1
-    configuration = logicmonitor_api_sdk.Configuration(company = 'YOUR_COMPANY', authentication={ 'id': 'YOUR_ACCESS_ID', 'key' : 'YOUR_ACCESS_KEY'})
-
-    # create an instance of the API class
-    metric_api = Metrics(interval=20, batch = True)
-    resource = Resource(ids={"system.hostname": "SampleDevice"}, create=True, name="SampleDevice", properties={'using.sdk': 'true'})
-    ds = DataSource(name="DSName")
-    instance = DataSourceInstance(name="instance")
-    dp = DataPoint(name="dataPoint")
-
-    while True:
-      values = {str(int(time.time())): random.randint(10, 100)}
-      metric_api.send_metrics(resource=resource,
-                          datasource=ds,
-                          instance=instance,
-                          datapoint=dp,
-                          values=values)
-      time.sleep(10)
+    pip install psutil
+    LM_COMPANY=<ACOUNT_NAME> LM_ACCESS_ID=<ID> LM_ACCESS_KEY='<KEY>' python disk_metrics.py
 
 
 .. _RST Configuration:
@@ -164,3 +139,9 @@ ResonseInterface
 .. |se| raw:: html
 
    </strike>
+
+
+Get in Touch
+============
+
+If you'd like to suggest a feature or report a bug, please add an issue `here <https://github.com/logicmonitor/logicmonitor_api_sdk_py/issues>`_.
