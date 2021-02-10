@@ -29,7 +29,7 @@ setup(
     # url="https://github.com/logicmonitor/logicmonitor_data_sdk_py",
     classifiers=[
       'Development Status :: 4 - Beta',
-      x      "Operating System :: OS Independent",
+      "Operating System :: OS Independent",
       'Intended Audience :: Developers',
       'Programming Language :: Python :: 2.7',
       'Programming Language :: Python :: 3.4',
