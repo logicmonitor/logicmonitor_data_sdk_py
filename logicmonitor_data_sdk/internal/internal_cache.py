@@ -18,10 +18,10 @@ import time
 
 import six
 
-from logicmonitor_api_sdk import ApiClient
-from logicmonitor_api_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk import ApiClient
+from logicmonitor_data_sdk.api.response_interface import ResonseInterface
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 _DEFAULT_QUEUE = 100
 
 
@@ -80,8 +80,9 @@ class BatchingCache(object):
       # self._stat_thread.daemon = True
       # self._stat_thread.start()
       logger.info(
-          "{} initialized with interval={}".format(self.__class__.__name__,
-                                                   interval))
+          "{} api processor is initialized with interval={}".format(
+              self.__class__.__name__,
+              interval))
     else:
       logger.info(
           "{} initialized without batch support".format(

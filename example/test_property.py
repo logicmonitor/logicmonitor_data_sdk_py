@@ -2,16 +2,16 @@ import logging
 import sys
 
 sys.path.append("..")
-import logicmonitor_api_sdk
-from logicmonitor_api_sdk.api.metrics import Metrics
+import logicmonitor_data_sdk
+from logicmonitor_data_sdk.api.metrics import Metrics
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 logger.setLevel(logging.INFO)
 
-configuration = logicmonitor_api_sdk.Configuration(company='COMPANY',
-                                                   authentication={
-                                                     'id': 'ID',
-                                                     'key': 'KEY'})
+configuration = logicmonitor_data_sdk.Configuration(company='COMPANY',
+                                                    authentication={
+                                                      'id': 'ID',
+                                                      'key': 'KEY'})
 
 configuration.debug = False
 

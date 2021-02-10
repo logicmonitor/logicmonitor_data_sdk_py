@@ -2,10 +2,9 @@
 
 import pprint
 import re  # noqa: F401
-
 import six
 
-from logicmonitor_api_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 
@@ -27,7 +26,7 @@ class DataPoint(object):
       creating a new datapoint.
 
   Examples:
-      >>> from logicmonitor_api_sdk.models.datapoint import DataPoint
+      >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
       >>> # Create the DataPoint object for cpu_time
       >>> dp = DataPoint(name='cpu_time', aggregation_type='sum')
   """

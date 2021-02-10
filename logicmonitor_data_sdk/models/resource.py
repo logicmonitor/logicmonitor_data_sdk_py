@@ -2,10 +2,9 @@
 
 import pprint
 import re  # noqa: F401
-
 import six
 
-from logicmonitor_api_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 
@@ -31,7 +30,7 @@ class Resource(object):
     create (:obj:`bool`, optional): Do you want to create the resource.
 
   Examples:
-      >>> from logicmonitor_api_sdk.models.resource import Resource
+      >>> from logicmonitor_data_sdk.models.resource import Resource
       >>> # Create the Resource object using the 'system.deviceId' properties.
       >>> resource = Resource(ids={'system.deviceId' : '1234'}, name='DeviceName', create=False)
 

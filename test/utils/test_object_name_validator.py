@@ -1,7 +1,7 @@
 from unittest import TestCase
 import re
 
-from logicmonitor_api_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 
 
 name_length = "the data length is greater  than 255 character then return false other wise true" \

@@ -11,7 +11,7 @@ import platform
 import six
 from six.moves import http_client as httplib
 
-from logicmonitor_api_sdk.version import __version__
+from logicmonitor_data_sdk.version import __version__
 
 
 # logging.basicConfig()
@@ -38,13 +38,14 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
   Args:
       company (:obj:`str`): The account name. If it is not provided then we will
         use the 'LM_COMPANY' environment variable.
+
       authentication (:obj:`dict` of `id` and `key`):  LogicMonitor supports
         verious types of the authentication. This variable will be used to
         specify the authentication key. If it is not provided then 'LM_ACCESS_ID'
         and 'LM_ACCESS_KEY' environment variable will be used to find the id and key.
   Examples:
-    >>> import logicmonitor_api_sdk
-    >>> conf = logicmonitor_api_sdk.Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
+    >>> import logicmonitor_data_sdk
+    >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
   """
 
   def __init__(self, company=None, authentication=None):
@@ -76,7 +77,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
 
     # Logging Settings
     self.logger = {}
-    self.logger["package_logger"] = logging.getLogger("lmingest")
+    self.logger["package_logger"] = logging.getLogger("lmdata")
     self.logger["urllib3_logger"] = logging.getLogger("urllib3")
     # Log format
     self.logger_format = '%(asctime)s %(levelname)s %(message)s'

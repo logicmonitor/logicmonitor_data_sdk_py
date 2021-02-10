@@ -3,12 +3,11 @@
 
 import pprint
 import re  # noqa: F401
-
 import six
 
-from logicmonitor_api_sdk.models.map_string_string import \
+from logicmonitor_data_sdk.models.map_string_string import \
   MapStringString  # noqa: F401,E501
-from logicmonitor_api_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 
@@ -27,7 +26,7 @@ class DataSourceInstance(object):
       convert these properties into system, auto, or custom properties.
 
   Examples:
-      >>> from logicmonitor_api_sdk.models.datasource_instance import DataSourceInstance
+      >>> from logicmonitor_data_sdk.models.datasource_instance import DataSourceInstance
       >>> # Create the DataSourceInstance object for CPU-0 instance monitoring
       >>> instance = DataSourceInstance(name='CPU-0')
   """

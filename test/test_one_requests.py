@@ -5,12 +5,12 @@ import time
 
 sys.path.append("..")
 
-import logicmonitor_api_sdk
-from logicmonitor_api_sdk.api.metrics import Metrics
-from logicmonitor_api_sdk.models.datapoint import DataPoint
-from logicmonitor_api_sdk.models.datasource import DataSource
-from logicmonitor_api_sdk.models.datasource_instance import DataSourceInstance
-from logicmonitor_api_sdk.models.resource import Resource
+import logicmonitor_data_sdk
+from logicmonitor_data_sdk.api.metrics import Metrics
+from logicmonitor_data_sdk.models.datapoint import DataPoint
+from logicmonitor_data_sdk.models.datasource import DataSource
+from logicmonitor_data_sdk.models.datasource_instance import DataSourceInstance
+from logicmonitor_data_sdk.models.resource import Resource
 
 max_host = 1
 max_ds = 1
@@ -18,7 +18,7 @@ max_inst = 2
 max_dp = 5
 max_values = 5
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 logger.setLevel(logging.INFO)
 
 
@@ -28,11 +28,11 @@ def random_string(max):
 
 def random_object(type):
   if type == 'resource':
-    name = "MukundSdk" + random_string(max_host)
+    name = "LMDevice" + random_string(max_host)
     return Resource(ids={"system.hostname": name},
-                    create=True, name=name, properties={'mukund.sdk': 'true'})
+                    create=True, name=name, properties={'using.sdk': 'true'})
   if type == 'datasource':
-    return DataSource(name="Mukundds" + random_string(max_ds))
+    return DataSource(name="DS" + random_string(max_ds))
   if type == 'instance':
     return DataSourceInstance(name="instance" + random_string(max_inst))
   if type == 'datapoint':
@@ -46,10 +46,10 @@ def random_object(type):
     return values
 
 
-configuration = logicmonitor_api_sdk.Configuration(company='COMPANY',
-                                                   authentication={
-                                                     'id': 'ID',
-                                                     'key': 'KEY'})
+configuration = logicmonitor_data_sdk.Configuration(company='COMPANY',
+                                                    authentication={
+                                                      'id': 'ID',
+                                                      'key': 'KEY'})
 
 configuration.debug = False
 

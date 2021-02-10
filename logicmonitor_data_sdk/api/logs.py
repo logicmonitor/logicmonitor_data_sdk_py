@@ -16,13 +16,13 @@ import re  # noqa: F401
 
 import six
 
-from logicmonitor_api_sdk import RestMetricsV1
-from logicmonitor_api_sdk.api_client import ApiClient
-from logicmonitor_api_sdk.internal.internal_cache import BatchingCache
+from logicmonitor_data_sdk import RestMetricsV1
+from logicmonitor_data_sdk.api_client import ApiClient
+from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 
 # python 2 and python 3 compatibility library
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 
 
 class Logs(BatchingCache):

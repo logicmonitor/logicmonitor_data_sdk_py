@@ -1,5 +1,5 @@
 *****************************************
-Python Ingestion library for LogicMonitor
+Python Data SDK library for LogicMonitor
 *****************************************
 
 This Python Library for ingesting the metrics into the LogicMonitor Platform
@@ -21,6 +21,8 @@ alerting.
 More details are available on `support
 site <https://www.logicmonitor.com/support>`__
 
+The :mod:`logicmonitor_data_sdk` module provides
+  - :mod:`logicmonitor_data_sdk.api.metrics`: a HTTP Api client for ingesting the metrics data.
 
 Requirements.
 *************
@@ -35,22 +37,18 @@ Installation
 pip install
 ===========
 
-If the python package ishosted on Github, you can install directly from
-Github
+Install from PyPI.
 
 .. code:: sh
 
-    pip install logicmonitor_api_sdk
+    pip install logicmonitor_data_sdk
 
-| (you may need to run ``pip`` with root permission:
-
-``sudo pip install logicmonitor_api_sdk``)
 
 Then import the package:
 
 .. code:: python
 
-    import logicmonitor_api_sdk
+    import logicmonitor_data_sdk
 
 
 Getting Started
@@ -58,7 +56,7 @@ Getting Started
 
 Please follow the :ref:`RST Installation` and then run below a working example for submitting the disk
 metrics to your LM account. This script will monitor the Usage, Free and Total of the disk at
-every 10 sec interval.
+every 5 sec interval.
 
 .. literalinclude:: ../../example/disk_metrics.py
   :language: python
@@ -75,10 +73,10 @@ Then run the program as:
 
 Configuration
 *************
-SDK must be configured with logicmonitor_api_sdk.Configuration().
+SDK must be configured with logicmonitor_data_sdk.Configuration().
 The account name, an API key and its id are required.
 
-.. automodule:: logicmonitor_api_sdk.configuration
+.. automodule:: logicmonitor_data_sdk.configuration
    :members:
 
 API Calls
@@ -94,7 +92,7 @@ Be sure to initialize the client using :ref:`RST Configuration` and then use :re
 
 Metrics Ingestion API
 =====================
-.. automodule:: logicmonitor_api_sdk.api.metrics
+.. automodule:: logicmonitor_data_sdk.api.metrics
    :members:
 
 
@@ -103,28 +101,28 @@ Models
 
 Resource
 ==========
-.. automodule:: logicmonitor_api_sdk.models.resource
+.. automodule:: logicmonitor_data_sdk.models.resource
    :members:
 
 DataSource
 ============
-.. automodule:: logicmonitor_api_sdk.models.datasource
+.. automodule:: logicmonitor_data_sdk.models.datasource
    :members:
 
 DataSourceInstance
 ====================
-.. automodule:: logicmonitor_api_sdk.models.datasource_instance
+.. automodule:: logicmonitor_data_sdk.models.datasource_instance
    :members:
 
 DataPoint
 ============
-.. automodule:: logicmonitor_api_sdk.models.datapoint
+.. automodule:: logicmonitor_data_sdk.models.datapoint
    :members:
 
 
 ResonseInterface
 ==================
-.. automodule:: logicmonitor_api_sdk.api.response_interface
+.. automodule:: logicmonitor_data_sdk.api.response_interface
     :members:
 
 .. toctree::
@@ -143,5 +141,4 @@ ResonseInterface
 
 Get in Touch
 ============
-
-If you'd like to suggest a feature or report a bug, please add an issue `here <https://github.com/logicmonitor/logicmonitor_api_sdk_py/issues>`_.
+If you have questions in general, reach out to our support@logicmonitor.com

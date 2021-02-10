@@ -1,13 +1,12 @@
-# The LogicMonitor Python Ingestion library
+# The LogicMonitor Python Data library
 This Python Library is suitable for ingesting the metrics into the LogicMonitor Platform
 
-[![Build](https://circleci.com/gh/mukundneharkar/lmsdk.svg?style=svg)](https://circleci.com/gh/mukundneharkar/lmsdk.svg?style=svg)
-[![Documentation Status](https://readthedocs.org/projects/logicmonitor-api-sdk-py/badge/?version=latest)](https://logicmonitor-api-sdk-py.readthedocs.io/en/latest/?badge=latest)
-[![PyPI - Version](https://img.shields.io/pypi/v/logicmonitor-api-sdk-py.svg)](https://pypi.org/project/logicmonitor-api-sdk-py)
-[![PyPI - Downloads](https://pepy.tech/badge/logicmonitor-api-sdk-py)](https://pepy.tech/project/logicmonitor-api-sdk-py)
+[![Documentation Status](https://readthedocs.org/projects/logicmonitor-data-sdk-py/badge/?version=latest)](https://logicmonitor-data-sdk-py.readthedocs.io/en/latest/?badge=latest)
+[![PyPI - Version](https://img.shields.io/pypi/v/logicmonitor-data-sdk-py.svg)](https://pypi.org/project/logicmonitor-data-sdk-py)
+[![PyPI - Downloads](https://pepy.tech/badge/logicmonitor-data-sdk-py)](https://pepy.tech/project/logicmonitor-data-sdk-py)
 
 
-- Library Documentation: https://logicmonitor-api-sdk-py.readthedocs.io/en/latest/
+- Library Documentation: https://logicmonitor-data-sdk-py.readthedocs.io/en/latest/
 - LogicMonitor: https://LogicMonitor.com
 
 Overview
@@ -27,7 +26,7 @@ Python 2.7 and 3.4+
 
 Documentation
 -------------
-https://logicmonitor-api-sdk-py.readthedocs.io/en/latest/
+https://logicmonitor-data-sdk-py.readthedocs.io/en/latest/
 
 
 Getting Started
@@ -45,17 +44,17 @@ interval.
     
     import psutil as psutil
     
-    import logicmonitor_api_sdk
-    from logicmonitor_api_sdk.api.response_interface import ResonseInterface
-    from logicmonitor_api_sdk.models import Resource, DataSource, DataPoint, \
+    import logicmonitor_data_sdk
+    from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+    from logicmonitor_data_sdk.models import Resource, DataSource, DataPoint, \
       DataSourceInstance
     
-    from logicmonitor_api_sdk.api.metrics import Metrics
+    from logicmonitor_data_sdk.api.metrics import Metrics
     
-    logger = logging.getLogger('lmingest.api')
+    logger = logging.getLogger('lmdata.api')
     logger.setLevel(logging.INFO)
     
-    configuration = logicmonitor_api_sdk.Configuration()
+    configuration = logicmonitor_data_sdk.Configuration()
     # For debug log, set the value to True
     configuration.debug = True
     
@@ -81,7 +80,7 @@ interval.
                           create=True)
       datasource = DataSource(name="DiskUsingSDK")
       datapoints = ['total', 'used', 'free']
-      metric_api = Metrics(batch=True, interval=10, response_callback=MyResponse())
+      metric_api = Metrics(batch=True, interval=30, response_callback=MyResponse())
       while True:
         partitions = psutil.disk_partitions()
         for p in partitions:
@@ -99,7 +98,7 @@ interval.
                                     instance=instance,
                                     datapoint=datapoint,
                                     values=values)
-        time.sleep(10)
+        time.sleep(5)
     
     
     if __name__ == "__main__":
@@ -118,5 +117,4 @@ Then run the program as:
 
 Get in Touch
 ------------
-
-If you'd like to suggest a feature or report a bug, please add an issue `here <https://github.com/logicmonitor/logicmonitor_api_sdk_py/issues>`_.
+If you have questions in general, reach out to our [support](mailto:support@logicmonitor.com)

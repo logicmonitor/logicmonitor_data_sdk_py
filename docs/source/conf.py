@@ -18,10 +18,10 @@ sys.setrecursionlimit(1500)
 
 # -- Project information -----------------------------------------------------
 _version = {}
-with open("../../logicmonitor_api_sdk/version.py") as fp:
+with open("../../logicmonitor_data_sdk/version.py") as fp:
   exec(fp.read(), _version)
 
-project = 'LogicMonitor API SDK Python'
+project = 'LogicMonitor DATA SDK Python'
 copyright = '2021, Logicmonitor'
 author = 'Logicmonitor'
 

@@ -14,7 +14,7 @@ import re  # noqa: F401
 
 import six
 
-from logicmonitor_api_sdk.models.map_string_string import \
+from logicmonitor_data_sdk.models.map_string_string import \
   MapStringString  # noqa: F401,E501
 
 

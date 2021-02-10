@@ -14,9 +14,9 @@ import re  # noqa: F401
 
 import six
 
-from logicmonitor_api_sdk.models.list_rest_data_point_v1 import \
+from logicmonitor_data_sdk.models.list_rest_data_point_v1 import \
   ListRestDataPointV1  # noqa: F401,E501
-from logicmonitor_api_sdk.models.map_string_string import \
+from logicmonitor_data_sdk.models.map_string_string import \
   MapStringString  # noqa: F401,E501
 
 

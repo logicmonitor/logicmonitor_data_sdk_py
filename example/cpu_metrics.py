@@ -6,17 +6,17 @@ import time
 import psutil as psutil
 
 sys.path.append("..")
-import logicmonitor_api_sdk
-from logicmonitor_api_sdk.api.response_interface import ResonseInterface
-from logicmonitor_api_sdk.models import Resource, DataSource, DataPoint, \
+import logicmonitor_data_sdk
+from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.models import Resource, DataSource, DataPoint, \
   DataSourceInstance
 
-from logicmonitor_api_sdk.api.metrics import Metrics
+from logicmonitor_data_sdk.api.metrics import Metrics
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 logger.setLevel(logging.INFO)
 
-configuration = logicmonitor_api_sdk.Configuration()
+configuration = logicmonitor_data_sdk.Configuration()
 # For debug log, set the value to True
 configuration.debug = False
 

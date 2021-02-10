@@ -11,13 +11,13 @@ from multiprocessing.pool import ApplyResult
 
 import six
 
-from logicmonitor_api_sdk import RestMetricsV1, RestDataSourceInstanceV1, \
+from logicmonitor_data_sdk import RestMetricsV1, RestDataSourceInstanceV1, \
   RestDataPointV1
-from logicmonitor_api_sdk.internal.internal_cache import BatchingCache
+from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 # python 2 and python 3 compatibility library
-from logicmonitor_api_sdk.rest import ApiException
+from logicmonitor_data_sdk.rest import ApiException
 
-logger = logging.getLogger('lmingest.api')
+logger = logging.getLogger('lmdata.api')
 
 
 class Metrics(BatchingCache):
@@ -28,14 +28,13 @@ class Metrics(BatchingCache):
   Args:
       batch (:obj:`bool`): Enable the batching support.
       interval (:obj:`int`): Batching flush interval. If batching is enabled then after that second we will flush the data to REST endpoint.
-      response_callback (:class:`lmingest.api.response_interface.ResonseInterface`): Callback for response handling.
-      api_client (:class:`lmingest.api_client.ApiClient`): The RAW HTTP REST client.
+      response_callback (:class:`logicmonitor_data_sdk.api.response_interface.ResonseInterface`): Callback for response handling.
+      api_client (:class:`logicmonitor_data_sdk.api_client.ApiClient`): The RAW HTTP REST client.
 
   Examples:
-    >>> from logicmonitor_api_sdk.api.metrics import Metrics
-    >>> from logicmonitor_api_sdk.api_client import ApiClient
-    >>> from logicmonitor_api_sdk.configuration import Configuration
-    >>> conf = logicmonitor_api_sdk.Configuration(company="ACCOUNT_NAME", \
+    >>> from logicmonitor_data_sdk.api.metrics import Metrics
+    >>> from logicmonitor_data_sdk.configuration import Configuration
+    >>> conf = Configuration(company="ACCOUNT_NAME", \
   authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
     >>> # Create the Metrics client with batching support and flush interval as 30 sec.
     >>> metricsApi = Metrics(batch=True, interval=30)
@@ -54,10 +53,10 @@ class Metrics(BatchingCache):
     This send_metrics method is used to send the metrics to rest endpoint.
 
     Args:
-        resource (:class:`lmingest.models.resource.Resource`): The Resource object.
-        datasource (:class:`lmingest.models.datasource.DataSource`): The datasource object.
-        instance (:class:`lmingest.models.datasource_instance.DataSourceInstance`): The instance object.
-        datapoint (:class:`lmingest.models.datapoint.DataPoint`): The datapoint object.
+        resource (:class:`logicmonitor_data_sdk.models.resource.Resource`): The Resource object.
+        datasource (:class:`logicmonitor_data_sdk.models.datasource.DataSource`): The datasource object.
+        instance (:class:`logicmonitor_data_sdk.models.datasource_instance.DataSourceInstance`): The instance object.
+        datapoint (:class:`logicmonitor_data_sdk.models.datapoint.DataPoint`): The datapoint object.
         values (:obj:`dict`): The values dictionary.
 
     Return:
@@ -65,20 +64,21 @@ class Metrics(BatchingCache):
         Otherwise the REST response will be return.
 
     Examples:
-      >>> from logicmonitor_api_sdk.api.lm_metrics import Metrics
-      >>> from logicmonitor_api_sdk.configuration import Configuration
-      >>> from logicmonitor_api_sdk.models.lm_resource import Resource
-      >>> from logicmonitor_api_sdk.models.lm_datasource import LMDataSource
-      >>> from logicmonitor_api_sdk.models.lm_datasource_instance import DataSourceInstance
-      >>> from logicmonitor_api_sdk.models.lm_datapoint import DataPoint
+      >>> import time
+      >>> from logicmonitor_data_sdk.api.metrics import Metrics
+      >>> from logicmonitor_data_sdk.configuration import Configuration
+      >>> from logicmonitor_data_sdk.models.resource import Resource
+      >>> from logicmonitor_data_sdk.models.datasource import DataSource
+      >>> from logicmonitor_data_sdk.models.datasource_instance import DataSourceInstance
+      >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
       >>>
-      >>> conf = lmingest.Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
+      >>> conf = Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
       >>> # Create the Metrics client with batching disabled
       >>> metric_api = Metrics(batch=False)
       >>> # Create the Resource object using the 'system.deviceId' properties.
       >>> resource = Resource(ids={"system.hostname": "SampleDevice"}, create=True, name="SampleDevice", properties={'using.sdk': 'true'})
       >>> # Create the LMDataSource object for CPU monitoring
-      >>> ds = LMDataSource(name="CPU")
+      >>> ds = DataSource(name="CPU")
       >>> # Create the DataSourceInstance object for CPU-0 instance monitoring
       >>> instance = DataSourceInstance(name="CPU-0")
       >>> # Create the DataPoint object for cpu-time

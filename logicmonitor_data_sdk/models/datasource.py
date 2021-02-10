@@ -3,10 +3,9 @@
 
 import pprint
 import re  # noqa: F401
-
 import six
 
-from logicmonitor_api_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 
@@ -29,7 +28,7 @@ class DataSource(object):
         If no existing DataSource matches the provided ID, an error results.
 
   Examples:
-      >>> from logicmonitor_api_sdk.models.datasource import DataSource
+      >>> from logicmonitor_data_sdk.models.datasource import DataSource
       >>> # Create the DataSource object for CPU monitoring
       >>> ds = DataSource(name='CPU')
 
