@@ -2,8 +2,8 @@
 This Python Library is suitable for ingesting the metrics into the LogicMonitor Platform
 
 [![Documentation Status](https://readthedocs.org/projects/logicmonitor-data-sdk-py/badge/?version=latest)](https://logicmonitor-data-sdk-py.readthedocs.io/en/latest/?badge=latest)
-[![PyPI - Version](https://img.shields.io/pypi/v/logicmonitor-data-sdk-py.svg)](https://pypi.org/project/logicmonitor-data-sdk-py)
-[![PyPI - Downloads](https://pepy.tech/badge/logicmonitor-data-sdk-py)](https://pepy.tech/project/logicmonitor-data-sdk-py)
+[![PyPI - Version](https://img.shields.io/pypi/v/logicmonitor-data-sdk.svg)](https://pypi.org/project/logicmonitor-data-sdk)
+[![PyPI - Downloads](https://pepy.tech/badge/logicmonitor-data-sdk)](https://pepy.tech/project/logicmonitor-data-sdk)
 
 
 - Library Documentation: https://logicmonitor-data-sdk-py.readthedocs.io/en/latest/
