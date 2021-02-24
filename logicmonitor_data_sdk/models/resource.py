@@ -2,9 +2,11 @@
 
 import pprint
 import re  # noqa: F401
+
 import six
 
-from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import \
+  ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 
@@ -60,8 +62,7 @@ class Resource(object):
     self._properties = None
     self.discriminator = None
     self._create = False
-    if not create:
-      self.create = create
+    self.create = create
     if description is not None:
       self.description = description
     if ids is not None:
