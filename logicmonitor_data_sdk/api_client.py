@@ -16,7 +16,6 @@ import tempfile
 import time
 from multiprocessing.pool import ThreadPool
 
-# python 2 and python 3 compatibility library
 import six
 from six.moves.urllib.parse import quote
 from six.moves.urllib.parse import unquote
@@ -25,6 +24,8 @@ import logicmonitor_data_sdk.models
 from logicmonitor_data_sdk import rest
 from logicmonitor_data_sdk.configuration import Configuration
 from logicmonitor_data_sdk.version import __version__
+
+# python 2 and python 3 compatibility library
 
 logger = logging.getLogger('lmdata.api')
 
@@ -79,7 +80,8 @@ class ApiClient(object):
 
   def __del__(self):
     self.pool.close()
-    self.pool.join()
+    self.pool.terminate()
+    # self.pool.join()
 
   @property
   def user_agent(self):

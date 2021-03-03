@@ -3,9 +3,11 @@
 
 import pprint
 import re  # noqa: F401
+
 import six
 
-from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
+from logicmonitor_data_sdk.utils.object_name_validator import \
+  ObjectNameValidator
 
 objectNameValidator = ObjectNameValidator()
 

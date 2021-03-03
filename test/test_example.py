@@ -17,8 +17,8 @@ from logicmonitor_data_sdk.models.resource import Resource
 # Configure API key authorization: LMv1
 configuration = logicmonitor_data_sdk.Configuration(company='COMPANY',
                                                     authentication={
-                                                     'id': 'ID',
-                                                     'key': 'KEY'})
+                                                      'id': 'ID',
+                                                      'key': 'KEY'})
 configuration.debug = True
 # create an instance of the API class
 metric_api = Metrics(interval=20, batch=True)
