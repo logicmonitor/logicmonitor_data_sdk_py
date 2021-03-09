@@ -370,8 +370,8 @@ class ObjectNameValidator:
       data_point_types = {"counter", "guage", "derive"}
       data_point_type = data_point_type.lower()
       if data_point_type not in data_point_types:
-        err_msg += "The datapoint %s is having Invalid dataPointType %s." % (
-          self.name, data_point_type)
+        err_msg += "The datapoint %s is having invalid dataPointType %s." % (
+          'type', data_point_type)
     return err_msg
 
   def check_datapoint_aggregation_type_validation(self,
@@ -381,6 +381,6 @@ class ObjectNameValidator:
     if data_point_aggregation_type is not None:
       data_point_aggregation_type = data_point_aggregation_type.lower()
       if data_point_aggregation_type not in data_point_aggregation_types:
-        err_msg += "The datapoint %s is having Invalid data_point_aggregation_type %s." % (
-          self.name, data_point_aggregation_type)
+        err_msg += "The datapoint %s is having invalid data_point_aggregation_type %s." % (
+          'aggregation_type', data_point_aggregation_type)
     return err_msg
