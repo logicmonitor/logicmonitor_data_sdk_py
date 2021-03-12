@@ -53,7 +53,7 @@ class Resource(object):
     'create': 'create'
   }
 
-  def __init__(self, ids, name, description=None, properties=None,
+  def __init__(self, ids, name='None', description=None, properties=None,
       create=False):  # noqa: E501
 
     self._description = None

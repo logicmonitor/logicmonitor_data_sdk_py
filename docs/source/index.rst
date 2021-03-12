@@ -54,8 +54,20 @@ Then import the package:
 Getting Started
 ***************
 
-Please follow the :ref:`RST Installation` and then run below a working example for submitting the disk
-metrics to your LM account. This script will monitor the Usage, Free and Total of the disk at
+Please follow the :ref:`RST Installation`.
+
+Simple Example
+==============
+The following example will create the new resource "SampleDevice" and data source called "PusMetricsDS".
+Please specified the valid company name, user id and user keys.
+
+.. literalinclude:: ../../example/simple_example.py
+  :language: python
+
+
+Detail Example - Disk Monitoring
+================================
+Run below a working example for submitting the disk metrics to your LM account. This script will monitor the Usage, Free and Total of the disk at
 every 5 sec interval.
 
 .. literalinclude:: ../../example/disk_metrics.py

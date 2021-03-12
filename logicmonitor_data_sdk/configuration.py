@@ -43,12 +43,17 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
         verious types of the authentication. This variable will be used to
         specify the authentication key. If it is not provided then 'LM_ACCESS_ID'
         and 'LM_ACCESS_KEY' environment variable will be used to find the id and key.
+      id (:obj:`str`): The access token id. If it is not provided then we will
+        use the 'LM_ACCESS_ID' environment variable or authentication variable.
+      key (:obj:`str`): The access token key. If it is not provided then we will
+        use the 'LM_ACCESS_KEY' environment variable or authentication variable.
   Examples:
     >>> import logicmonitor_data_sdk
-    >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
+    >>> # Or use 'id' and 'key' variables to specify the access token.
+    >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key= 'API_ACCESS_KEY')
   """
 
-  def __init__(self, company=None, authentication=None):
+  def __init__(self, company=None, authentication=None, id=None, key=None):
     """Constructor"""
     # Default Base url
     company = company or os.environ.get('LM_COMPANY')
@@ -57,14 +62,13 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
           'Company must have your account name'
       )
     if not authentication:
-      id = os.environ.get('LM_ACCESS_ID', None)
-      key = os.environ.get('LM_ACCESS_KEY', None)
+      id = os.environ.get('LM_ACCESS_ID', id)
+      key = os.environ.get('LM_ACCESS_KEY', key)
       # type = os.environ.get('LM_ACCESS_TYPE', 'LMv1')
       if (id and key):
         authentication = {'id': id, 'key': key}
     if not authentication or not isinstance(authentication,
                                             dict) or 'id' not in authentication or 'key' not in authentication:
-      print(authentication)
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )

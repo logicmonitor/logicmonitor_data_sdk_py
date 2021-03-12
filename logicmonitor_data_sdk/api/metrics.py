@@ -22,8 +22,7 @@ logger = logging.getLogger('lmdata.api')
 
 class Metrics(BatchingCache):
   """
-  This API client is for ingesting the metrics in LogicMonitor and updating
-  the properties of the resource or instance.
+  This API client is for ingesting the metrics in LogicMonitor.
 
   Args:
       batch (:obj:`bool`): Enable the batching support.
@@ -34,8 +33,7 @@ class Metrics(BatchingCache):
   Examples:
     >>> from logicmonitor_data_sdk.api.metrics import Metrics
     >>> from logicmonitor_data_sdk.configuration import Configuration
-    >>> conf = Configuration(company="ACCOUNT_NAME", \
-  authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
+    >>> conf = Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key='API_ACCESS_KEY')
     >>> # Create the Metrics client with batching support and flush interval as 30 sec.
     >>> metricsApi = Metrics(batch=True, interval=30)
   """
@@ -72,7 +70,7 @@ class Metrics(BatchingCache):
       >>> from logicmonitor_data_sdk.models.datasource_instance import DataSourceInstance
       >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
       >>>
-      >>> conf = Configuration(company="ACCOUNT_NAME", authentication={'id': 'API_ACCESS_ID', 'key': 'API_ACCESS_KEY', 'type' : 'LMv1'})
+      >>> conf = Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key='API_ACCESS_KEY')
       >>> # Create the Metrics client with batching disabled
       >>> metric_api = Metrics(batch=False)
       >>> # Create the Resource object using the 'system.deviceId' properties.
