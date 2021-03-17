@@ -253,7 +253,6 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
   def check_authentication(self, authentication):
     if not authentication or not isinstance(authentication,
                                             dict) or 'id' not in authentication or 'key' not in authentication:
-      print(authentication)
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )
