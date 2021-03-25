@@ -132,7 +132,7 @@ DataPoint
    :members:
 
 
-ResonseInterface
+ResponseInterface
 ==================
 .. automodule:: logicmonitor_data_sdk.api.response_interface
     :members:
