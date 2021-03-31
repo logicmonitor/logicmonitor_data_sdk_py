@@ -81,6 +81,21 @@ Then run the program as:
     LM_COMPANY=<ACOUNT_NAME> LM_ACCESS_ID=<ID> LM_ACCESS_KEY='<KEY>' python disk_metrics.py
 
 
+Simple Example - Logs
+=====================
+
+Run below script to send a log to Logicmonitor.
+
+.. literalinclude:: ../../example/log_non_batch.py
+  :language: python
+
+then run the script as :
+
+.. code:: python
+
+  pip install psutil
+  python log_non_batch.py
+
 .. _RST Configuration:
 
 Configuration
@@ -105,6 +120,13 @@ Be sure to initialize the client using :ref:`RST Configuration` and then use :re
 Metrics Ingestion API
 =====================
 .. automodule:: logicmonitor_data_sdk.api.metrics
+   :members:
+
+.. _RST LogsAPI:
+
+Logs Ingestion API
+=====================
+.. automodule:: logicmonitor_data_sdk.api.logs
    :members:
 
 
