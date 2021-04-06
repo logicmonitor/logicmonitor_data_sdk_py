@@ -18,7 +18,7 @@ configuration = logicmonitor_data_sdk.Configuration(company='yourcompany',
                                                     key='accessKey')
                                                     
 
-resource = Resource(ids={"System.ips": "192.168.1.33"})
+resource = Resource(ids={"System.hostname": "192.168.1.33"})
 log_api = Logs(batch = False)
 log_api.send_logs(resource = resource,msg= "this is smaple log")
 
