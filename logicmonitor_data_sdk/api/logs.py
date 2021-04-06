@@ -1,4 +1,4 @@
-# coding: utf-8
+  # coding: utf-8
 """
 Logs API client: It formats and submit REST API calls to LogicMonitor.
 """
@@ -52,10 +52,12 @@ class Logs(BatchingCache):
 
     Args:
         resource (:class:`logicmonitor_data_sdk.models.resource.Resource`): The Resource object.
-        logs (:obj:`dict`): The logs details in dictonary. e.g. {'msg' : 'This is sample logs'}.
+        msg (:obj:`str`): The log message. e.g. msg = "this is sample log msg".
+        timestamp (:obj:`str` or :obj:`int`, Optional): The timestamp when the event occurred. Supported date formats are ISO8601 and Unix Epoch (in secs, ms, ns).
+        metadata (:obj:`dict`,Optional): Metadata which can be used for defining logsource and other properties.
 
     Return:
-        If in :class:`Metrics` batching is enabled then None
+        If in :class:`Logs` batching is enabled then None
         Otherwise the REST response will be return.
 
     Examples:
@@ -66,10 +68,10 @@ class Logs(BatchingCache):
       >>>
       >>> conf = Configuration(company="ACCOUNT_NAME", id= 'API_ACCESS_ID', key= 'API_ACCESS_KEY')
       >>> # Create the Log client with batching enable
-      >>> log_api = Logs()
-      >>> # Create the Resource object using the 'system.deviceId' properties.
+      >>> log_api = Logs() # By default batching is enabled with interval of 30 sec.
+      >>> # Create the Resource object using the 'system.hostname' properties.
       >>> resource = Resource(ids={"system.hostname": "SampleDevice"}, name="SampleDevice", properties={'using.sdk': 'true'})
-      >>> log_api.send_logs(resource=resource, logs={'msg' : 'This is sample logs'})
+      >>> log_api.send_logs(resource=resource, msg = "this is a sample log")
     """
 
     """LogIngestApi  # noqa: E501
@@ -88,28 +90,34 @@ class Logs(BatchingCache):
              returns the request thread.
     """
 
-    all_params = ['resource', 'logs']  # noqa: E501
+    all_params = ['resource', 'msg','timestamp', 'metadata']  # noqa: E501
     params = locals()
     for key, val in six.iteritems(params['kwargs']):
       if key not in all_params:
         raise TypeError(
-            "Got an unexpected keyword argument '%s' to method SendMetrics" % key
+            "Got an unexpected keyword argument '%s' to method send_logs()" % key
         )
       params[key] = val
     del params['kwargs']
     del params['self']
     del params['all_params']
     for one in all_params:
-      if not params.__contains__(one):
+      if (one!='timestamp' and one!='metadata') and (not params.__contains__(one)):
         raise TypeError(
             "Some arguments are missing keys='%s'" %
-            str(params.keys())
+            one
         )
     # logger.debug("Request Send for {}".format(str(params['resource'].ids)))
     if self.batch:
       # self.add_request(**kwargs)
+      logs = {}
+      logs['msg'] = kwargs['msg']
+      if kwargs.__contains__('timestamp'):
+        logs['timestamp'] = kwargs['timestamp']
+      if kwargs.__contains__('metadata'):
+        logs['metadata'] = kwargs['metadata']
       self.add_request(resource=copy.deepcopy(kwargs['resource']),
-                       logs=kwargs['logs'])
+                       logs=logs)
     else:
       return self._single_request(**kwargs)
 
@@ -149,13 +157,18 @@ class Logs(BatchingCache):
   def _merge_request(self, single_request):
     resource = single_request['resource']
     logs = single_request['logs']
-    logs['_lm.resourceId'] = resource.ids
+    logs['_lm.resourceId'] = resource.ids   
     self._payload_cache.append(logs)
 
   def _single_request(self, **kwargs):
     resource = kwargs['resource']
-    logs = kwargs['logs']
+    logs = {}
+    logs['msg']= kwargs['msg']
     logs['_lm.resourceId'] = resource.ids
+    if kwargs.__contains__('timestamp'):
+      logs['timestamp'] = kwargs['timestamp']
+    if kwargs.__contains__('metadata'):
+      logs['metadata'] = kwargs['metadata']
     body = []
     body.append(logs)
     return self.make_request(path='/log/ingest', method='POST',
