@@ -7,15 +7,13 @@ import logging
 import multiprocessing
 import os
 import platform
-
 import six
 from six.moves import http_client as httplib
 
+from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 from logicmonitor_data_sdk.version import __version__
 
-
-# logging.basicConfig()
-
+objectNameValidator = ObjectNameValidator()
 
 class TypeWithDefault(type):
   def __init__(cls, name, bases, dct):
@@ -61,6 +59,10 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       raise ValueError(
           'Company must have your account name'
       )
+    if not objectNameValidator.is_valid_company_name(company):
+      raise ValueError(
+          'Invalid Company Name'
+      )
     if not authentication:
       id = os.environ.get('LM_ACCESS_ID', id)
       key = os.environ.get('LM_ACCESS_KEY', key)
@@ -72,6 +74,15 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )
+    if not objectNameValidator.is_valid_auth_id(id):
+      raise ValueError(
+          'Invalid Access ID'
+      )
+    if key:
+      if not objectNameValidator.is_valid_auth_key(key):
+        raise ValueError(
+          'Invalid Access Key'
+        )
     self._company = company
     self._host = "https://" + self._company + ".logicmonitor.com/rest"
     self.check_authentication(authentication)
