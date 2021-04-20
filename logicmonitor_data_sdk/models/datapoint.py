@@ -19,13 +19,14 @@ class DataPoint(object):
     name (:obj:`str`): Datapoint name. If no existing datapoint  matches for specified
       DataSource, a new datapoint is created with this name.
     aggregation_type (:obj:`str`, optional): The aggregation method, if any, that should be used
-      if data is pushed in sub-minute intervals. Only considered when creating
+      if data is pushed in sub-minute intervals. Allowed options are "sum", "average" and "none"(default) 
+      where "none" would take last value for that minute. Only considered when creating
       a new datapoint. See the About the Push Metrics REST API section of this
       guide for more information on datapoint value aggregation intervals.
     description (:obj:`str`, optional) : Datapoint description. Only considered when creating a
       new datapoint.
-    type (:obj:`str`, optional) : Metric type as a number in string format. Only considered when
-      creating a new datapoint.
+    type (:obj:`str`, optional) : Metric type as a number in string format. Allowed options are 
+      "guage" (default) and "counter". Only considered when creating a new datapoint.
 
   Examples:
       >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
@@ -74,7 +75,7 @@ class DataPoint(object):
   @property
   def aggregation_type(self):
     """The aggregation method, if any, that should be used if data is pushed in
-    sub-minute intervals. Only considered when creating a new datapoint.
+    sub-minute intervals. Aloowed values are 'sum', 'average' and 'none'(default). Only considered when creating a new datapoint.
 
     :return: The type of this DataPoint.
     :rtype: str
@@ -128,9 +129,9 @@ class DataPoint(object):
 
   @property
   def type(self):
-    """Metric type as a number in string format. Only considered when creating a new datapoint.
+    """Metric type (guage or counter) as a number in string format. Only considered when creating a new datapoint.
 
-    :return: The aggregation_type of this DataPoint.
+    :return: The type of this DataPoint.
     :rtype: str
     """
     return self._type

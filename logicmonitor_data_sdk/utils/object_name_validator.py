@@ -30,6 +30,15 @@ PATTERN_INVALID_DATA_SOURCE_DISPLAY_NAME = re.compile(
 REGEX_DATA_SOURCE_GROUP_NAME = "[a-zA-Z0-9_\\- ]+$"
 PATTERN_DATA_SOURCE_GROUP_NAME = re.compile(REGEX_DATA_SOURCE_GROUP_NAME)
 
+REGEX_COMPANY_NAME = "^[a-zA-Z0-9_.\\-]+$"
+PATTERN_COMPANY_NAME = re.compile(REGEX_COMPANY_NAME)
+
+REGEX_AUTH_ID = "^[a-zA-Z0-9]+$"
+PATTERN_AUTH_ID = re.compile(REGEX_AUTH_ID)
+
+REGEX_AUTH_KEY = "[\s]"
+PATTERN_AUTH_KEY = re.compile(REGEX_AUTH_KEY)
+
 _INVALID_DATA_POINT_NAME_SET = {
   "SIN",
   "COS",
@@ -109,7 +118,7 @@ class ObjectNameValidator:
     return bool(PATTERN_RESOURCE_NAME.match(resource_name))
 
   def is_valid_resource_id(self, resource_id):
-    return not bool(PATTERN_REGEX_INVALID_RESOURCE_NAME.match(resource_id))
+    return not bool(PATTERN_REGEX_INVALID_RESOURCE_NAME.search(resource_id))
 
   def is_valid_datasource_name(self, name):
     return len(self.validate_datasource_name(name)) == 0
@@ -149,6 +158,15 @@ class ObjectNameValidator:
 
   def is_valid_instance_name(self, instance_name):
     return bool(PATTERN_INSTANCE_NAME.match(instance_name))
+
+  def is_valid_company_name(self, company_name):
+    return bool(PATTERN_COMPANY_NAME.match(company_name))
+
+  def is_valid_auth_id(self, auth_id):
+    return bool(PATTERN_AUTH_ID.match(auth_id))
+
+  def is_valid_auth_key(self, auth_key):
+    return not bool(PATTERN_AUTH_KEY.search(auth_key))
 
   def validate_device_display_name(self, name):
     return self._validate(name, "instance display name",
