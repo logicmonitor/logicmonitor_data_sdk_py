@@ -74,12 +74,12 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )
-    if not objectNameValidator.is_valid_auth_id(id):
+    if not objectNameValidator.is_valid_auth_id(authentication.get('id', None)):
       raise ValueError(
           'Invalid Access ID'
       )
-    if key:
-      if not objectNameValidator.is_valid_auth_key(key):
+    if authentication.get('key', None):
+      if not objectNameValidator.is_valid_auth_key(authentication.get('key', None)):
         raise ValueError(
           'Invalid Access Key'
         )
