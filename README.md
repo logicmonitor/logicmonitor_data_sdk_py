@@ -123,7 +123,10 @@ If you have questions in general, reach out to our [support](mailto:support@logi
 ------------
 Copyright, 2021, LogicMonitor, Inc.
 
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL 
+was not distributed with this file, You can obtain 
+one at https://mozilla.org/MPL/2.0/.
 
 
 
