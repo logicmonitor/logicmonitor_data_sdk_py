@@ -9,9 +9,9 @@ one at https://mozilla.org/MPL/2.0/.
 """
 
   # coding: utf-8
-"""
-Logs API client: It formats and submit REST API calls to LogicMonitor.
-"""
+
+# Logs API client: It formats and submit REST API calls to LogicMonitor.
+
 
 from __future__ import absolute_import
 

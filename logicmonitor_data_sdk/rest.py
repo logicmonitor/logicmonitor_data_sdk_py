@@ -9,14 +9,11 @@ one at https://mozilla.org/MPL/2.0/.
 """
 
 # coding: utf-8
-"""
-    LogicMonitor API-Ingest Rest API
+#    LogicMonitor API-Ingest Rest API
 
-    LogicMonitor is a SaaS-based performance monitoring platform that provides full visibility into complex, hybrid infrastructures, offering granular performance monitoring and actionable data and insights. API-Ingest provides the entry point in the form of public rest APIs for ingesting metrics into LogicMonitor. For using this application users have to create LMAuth token using access id and key from santaba.  # noqa: E501
+#    LogicMonitor is a SaaS-based performance monitoring platform that provides full visibility into complex, hybrid infrastructures, offering granular performance monitoring and actionable data and insights. API-Ingest provides the entry point in the form of public rest APIs for ingesting metrics into LogicMonitor. For using this application users have to create LMAuth token using access id and key from santaba.  # noqa: E501
 
-    OpenAPI spec version: 3.0.0
-
-"""
+#    OpenAPI spec version: 3.0.0
 
 from __future__ import absolute_import
 
