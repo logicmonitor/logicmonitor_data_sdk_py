@@ -20,8 +20,8 @@ logger.setLevel(logging.INFO)
 
 configuration = logicmonitor_data_sdk.Configuration(company='COMPANY',
                                                     authentication={
-                                                      'id': 'ID',
-                                                      'key': 'KEY'})
+                                                        'id': 'ID',
+                                                        'key': 'KEY'})
 
 configuration.debug = False
 
@@ -36,6 +36,6 @@ logger.info(response)
 response = metric_api.update_instance_property(
     resource_ids={'system.deviceId': '233267'}, datasource='dsname_1',
     instancename='instance_1', instance_properties={
-      'ins.property': 'values'},
+        'ins.property': 'values'},
 )
 logger.info(response)

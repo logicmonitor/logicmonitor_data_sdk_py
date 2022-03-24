@@ -323,3 +323,38 @@ class TestObjectNameValidator(TestCase):
                                                   "field_name",
                                                   PATTERN_REGEX_INVALID_RESOURCE_NAME)
     self.assertNotEqual(0, len(result))
+
+  def test_check_datapoint_percentile_validation(self):
+    percentile = -10
+    self.assertEqual('The percentile %i is invalid' % percentile,self.object_name_validator.check_datapoint_percentile_validation(percentile))
+    percentile = 11.25
+    self.assertEqual('',self.object_name_validator.check_datapoint_percentile_validation(percentile))
+    percentile = 101
+    self.assertEqual('The percentile %i is invalid' % percentile,self.object_name_validator.check_datapoint_percentile_validation(percentile))
+    percentile = 10
+    self.assertEqual('',self.object_name_validator.check_datapoint_percentile_validation(percentile))
+
+  def test_check_singleInstanceDS_validation(self):
+      self.assertEqual('',self.object_name_validator.check_singleInstanceDS_validation(True))
+      self.assertEqual('',self.object_name_validator.check_singleInstanceDS_validation(False))
+      singleInstanceDS = 'true'
+      self.assertEqual(f"singleInstanceDS value {singleInstanceDS} incorrect", self.object_name_validator.check_singleInstanceDS_validation(singleInstanceDS))
+
+  def test_is_valid_company_name(self):
+      result = self.object_name_validator.is_valid_company_name("abcd xyz")
+      self.assertEqual(False,result)
+      result = self.object_name_validator.is_valid_company_name("abcdxyz#*(){};':")
+      self.assertEqual(False,result)
+      result = self.object_name_validator.is_valid_company_name("lmfirstlast")
+      self.assertEqual(True,result)
+  def test_is_valid_auth_id(self):
+      result = self.object_name_validator.is_valid_auth_id("* )8123123")
+      self.assertEqual(False,result)
+      result = self.object_name_validator.is_valid_auth_id("abcdxyz1234")
+      self.assertEqual(True,result)
+
+  def test_is_valid_auth_key(self):
+      result = self.object_name_validator.is_valid_auth_key("key space")
+      self.assertEqual(False,result)
+      result = self.object_name_validator.is_valid_auth_key("keynotwithspace")
+      self.assertEqual(True,result)

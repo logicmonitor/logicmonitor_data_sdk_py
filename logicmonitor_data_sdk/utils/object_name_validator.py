@@ -404,10 +404,22 @@ class ObjectNameValidator:
   def check_datapoint_aggregation_type_validation(self,
       data_point_aggregation_type):
     err_msg = ""
-    data_point_aggregation_types = {"none", "avg", "sum"}
+    data_point_aggregation_types = {"none", "avg", "sum", "percentile"}
     if data_point_aggregation_type is not None:
       data_point_aggregation_type = data_point_aggregation_type.lower()
       if data_point_aggregation_type not in data_point_aggregation_types:
         err_msg += "The datapoint %s is having invalid data_point_aggregation_type %s." % (
           'aggregation_type', data_point_aggregation_type)
+    return err_msg
+
+  def check_datapoint_percentile_validation(self, percentile):
+    err_msg = ""
+    if (percentile is not None) and (not 1<= percentile <=100):
+      err_msg+="The percentile {} is invalid".format(percentile)
+    return err_msg
+
+  def check_singleInstanceDS_validation(self , singleInstanceDS):
+    err_msg = ""
+    if type(singleInstanceDS) != bool:
+      err_msg+= "singleInstanceDS value {} incorrect".format(singleInstanceDS)
     return err_msg

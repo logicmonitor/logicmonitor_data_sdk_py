@@ -29,7 +29,7 @@ class DataPoint(object):
     name (:obj:`str`): Datapoint name. If no existing datapoint  matches for specified
       DataSource, a new datapoint is created with this name.
     aggregation_type (:obj:`str`, optional): The aggregation method, if any, that should be used
-      if data is pushed in sub-minute intervals. Allowed options are "sum", "average" and "none"(default) 
+      if data is pushed in sub-minute intervals. Allowed options are "sum", "average" ,"percentile" and "none"(default)
       where "none" would take last value for that minute. Only considered when creating
       a new datapoint. See the About the Push Metrics REST API section of this
       guide for more information on datapoint value aggregation intervals.
@@ -37,6 +37,7 @@ class DataPoint(object):
       new datapoint.
     type (:obj:`str`, optional) : Metric type as a number in string format. Allowed options are 
       "guage" (default) and "counter". Only considered when creating a new datapoint.
+    percentile (:obj: `int` , optional): One of the Aggregation Type. Only set when aggregation_type is set as "percentile"
 
   Examples:
       >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
@@ -48,6 +49,7 @@ class DataPoint(object):
     'description': 'str',
     'name': 'str',
     'type': 'str',
+    'percentile':'int'
   }
 
   attribute_map = {
@@ -55,15 +57,20 @@ class DataPoint(object):
     'description': 'dataPointDescription',
     'name': 'dataPointName',
     'type': 'dataPointType',
+    'percentile':'percentileValue',
   }
 
   def __init__(self, name, aggregation_type=None,
-      description=None, type=None):  # noqa: E501
+      description=None, type=None,percentile=None):  # noqa: E501
 
     self._aggregation_type = None
     self._description = None
     self._name = None
     self._type = None
+#Percentile
+    
+    self._percentile = None
+
     self.discriminator = None
 
     if aggregation_type is not None:
@@ -74,6 +81,12 @@ class DataPoint(object):
       self.name = name
     if type is not None:
       self.type = type
+    if percentile is not None and aggregation_type=='percentile':
+      self.percentile = percentile  #Percentile
+    elif percentile is not None and (aggregation_type is not 'percentile' or 'Percentile'):
+      raise ValueError("Aggregation type: {} is not 'percentile' ".format(aggregation_type))
+
+
 
     error_msg = self.valid_field()
     if error_msg is not None and len(error_msg) > 0:
@@ -85,7 +98,7 @@ class DataPoint(object):
   @property
   def aggregation_type(self):
     """The aggregation method, if any, that should be used if data is pushed in
-    sub-minute intervals. Aloowed values are 'sum', 'average' and 'none'(default). Only considered when creating a new datapoint.
+    sub-minute intervals. Aloowed values are 'sum', 'average' , 'percentile' and 'none'(default). Only considered when creating a new datapoint.
 
     :return: The type of this DataPoint.
     :rtype: str
@@ -152,6 +165,23 @@ class DataPoint(object):
     if err_msg:
       raise ValueError(err_msg)
     self._type = type
+  
+  #Percentile
+  @property
+  def percentile(self):
+    """One of the Aggregation Type. Only set when aggregation_type is set as "percentile".
+
+    :return: The percentile of that datapoint between limit [0-100]
+    :rtype: int
+    """
+    return self._percentile
+
+  @percentile.setter
+  def percentile(self,percentile):
+    err_msg = objectNameValidator.check_datapoint_percentile_validation(percentile)
+    if err_msg:
+      raise ValueError(err_msg)
+    self._percentile = percentile
 
   def to_dict(self):
     result = {}
@@ -213,5 +243,7 @@ class DataPoint(object):
     # dataPointAggregationType Validation
     err_msg += objectNameValidator.check_datapoint_aggregation_type_validation(
         self.aggregation_type)
+
+    err_msg+=objectNameValidator.check_datapoint_percentile_validation(self.percentile)
 
     return err_msg
