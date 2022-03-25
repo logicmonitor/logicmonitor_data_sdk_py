@@ -189,6 +189,7 @@ class BatchingCache(object):
     self._lock.release()
 
   def make_request(self, path, method, **kwargs):  # noqa: E501
+
     all_params = ['create', 'body']  # noqa: E501
     all_params.append('async_req')
     all_params.append('_return_http_data_only')
@@ -240,6 +241,7 @@ class BatchingCache(object):
     _preload_content_value = True
     if _response_type == 'file':
       _preload_content_value = False
+
     return self.api_client.call_api(
         path, method,
         path_params,

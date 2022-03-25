@@ -36,8 +36,8 @@ class DataPoint(object):
     description (:obj:`str`, optional) : Datapoint description. Only considered when creating a
       new datapoint.
     type (:obj:`str`, optional) : Metric type as a number in string format. Allowed options are 
-      "guage" (default) and "counter". Only considered when creating a new datapoint.
-    percentile (:obj: `int` , optional): One of the Aggregation Type. Only set when aggregation_type is set as "percentile"
+      "guage" (default) and "counter". Only c onsidered when creating a new datapoint.
+    percentile (:obj:`int`, optional) : One of the Aggregation Type. Only set when aggregation_type is set as "percentile"
 
   Examples:
       >>> from logicmonitor_data_sdk.models.datapoint import DataPoint
@@ -245,5 +245,4 @@ class DataPoint(object):
         self.aggregation_type)
 
     err_msg+=objectNameValidator.check_datapoint_percentile_validation(self.percentile)
-
     return err_msg
