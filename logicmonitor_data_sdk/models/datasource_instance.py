@@ -28,7 +28,6 @@ class DataSourceInstance(object):
   """
   This model is used to defining the datasource object.
 
-
   Args:
     name (:obj:`str`): Instance name. If no existing instance matches, a new instance
       is created with this name.
@@ -60,7 +59,7 @@ class DataSourceInstance(object):
   }
 
   def __init__(self, name, description=None,
-               display_name=None, instanceId=None, properties=None):  # noqa: E501
+      display_name=None, instanceId=None, properties=None):  # noqa: E501
 
     self._description = None
     self._display_name = None
