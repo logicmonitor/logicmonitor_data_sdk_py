@@ -414,7 +414,7 @@ class ObjectNameValidator:
 
   def check_datapoint_percentile_validation(self, percentile):
     err_msg = ""
-    if (percentile is not None) and (not 1<= percentile <=100):
+    if (percentile is not None) and (not 1<= percentile <100):
       err_msg+="The percentile {} is invalid".format(percentile)
     return err_msg
 
