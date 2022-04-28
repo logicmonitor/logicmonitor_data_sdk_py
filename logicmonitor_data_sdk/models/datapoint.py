@@ -83,8 +83,12 @@ class DataPoint(object):
       self.type = type
     if percentile is not None and aggregation_type=='percentile':
       self.percentile = percentile  #Percentile
-    elif percentile is not None and (aggregation_type is not 'percentile' or 'Percentile'):
+    elif percentile is not None and (aggregation_type != 'percentile' or 'Percentile'):
       raise ValueError("Aggregation type: {} is not 'percentile' ".format(aggregation_type))
+    elif aggregation_type=='percentile' and percentile is None:
+      raise ValueError("Percetile cannot be none if Aggregation type is {}".format(aggregation_type))
+
+
 
 
 
