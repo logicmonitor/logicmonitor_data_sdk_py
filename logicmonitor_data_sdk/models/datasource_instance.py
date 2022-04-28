@@ -207,3 +207,33 @@ class DataSourceInstance(object):
   def __ne__(self, other):
     """Returns true if both objects are not equal"""
     return not self == other
+  def _valid_field(self):
+    instanceId = self.instanceId
+
+    err_msg = ""
+    # instance_name Validations
+    if instanceId is None or instanceId == 0:
+      err_msg += objectNameValidator.check_instance_name_validation(self.name)
+
+      # instance_displayname Validations
+      err_msg += objectNameValidator.check_instance_displayname_validation(
+        self.display_name)
+
+      # instance_properties Validation
+      err_msg += objectNameValidator.check_instance_properties_validation(
+        self.properties)
+    elif instanceId !=0:
+      if instanceId !=None and instanceId<0:
+        err_msg+="Instance ID {%s} should not be negative." % instanceId
+
+      err_msg += objectNameValidator.check_instance_name_validation(self.name)
+
+      # instance_displayname Validations
+      err_msg += objectNameValidator.check_instance_displayname_validation(
+        self.display_name)
+
+      # instance_properties Validation
+      err_msg += objectNameValidator.check_instance_properties_validation(
+        self.properties)
+
+    return err_msg
