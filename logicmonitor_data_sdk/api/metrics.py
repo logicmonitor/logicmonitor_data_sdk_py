@@ -50,12 +50,12 @@ class Metrics(BatchingCache):
   """
 
   def __init__(self, batch=True, interval=30, response_callback=None,
-               api_client=None):
-      super(Metrics, self).__init__(api_client=api_client, batch=batch,
-                                    interval=interval,
-                                    response_callback=response_callback,
-                                    request_cb=self._do_request,
-                                    merge_cb=self._merge_request)
+      api_client=None):
+    super(Metrics, self).__init__(api_client=api_client, batch=batch,
+                                  interval=interval,
+                                  response_callback=response_callback,
+                                  request_cb=self._do_request,
+                                  merge_cb=self._merge_request)
 
   def send_metrics(self, **kwargs):  # noqa: E501
     """
@@ -96,113 +96,113 @@ datapoint=dp, values={ time.time() : '23'})
                   'values']  # noqa: E501
     params = locals()
     for key, val in six.iteritems(params['kwargs']):
-        if key not in all_params:
-            raise TypeError(
-                "Got an unexpected keyword argument '%s' to method SendMetrics" % key
-            )
-        params[key] = val
+      if key not in all_params:
+        raise TypeError(
+          "Got an unexpected keyword argument '%s' to method SendMetrics" % key
+        )
+      params[key] = val
     del params['kwargs']
     del params['self']
     del params['all_params']
     for one in all_params:
-        if not params.__contains__(one):
-            raise TypeError(
-                "Some arguments are missing keys='%s'" %
-                str(params.keys())
-            )
+      if not params.__contains__(one):
+        raise TypeError(
+          "Some arguments are missing keys='%s'" %
+          str(params.keys())
+        )
     # logger.debug("Request Send for {}".format(str(params['resource'].ids)))
     if self.batch:
-        # self.add_request(**kwargs)
-        self.add_request(resource=copy.deepcopy(kwargs['resource']),
-                         datasource=copy.deepcopy(kwargs['datasource']),
-                         instance=copy.deepcopy(kwargs['instance']),
-                         datapoint=copy.deepcopy(kwargs['datapoint']),
-                         values=kwargs['values'])
+      # self.add_request(**kwargs)
+      self.add_request(resource=copy.deepcopy(kwargs['resource']),
+                       datasource=copy.deepcopy(kwargs['datasource']),
+                       instance=copy.deepcopy(kwargs['instance']),
+                       datapoint=copy.deepcopy(kwargs['datapoint']),
+                       values=kwargs['values'])
     else:
-        return self._single_request(**kwargs)
+      return self._single_request(**kwargs)
 
   def update_resource_property(self, resource_ids, resource_properties,
-                               patch=True):  # noqa: E501
-      #
-      # This update_resource_property method is used to update the property of the resource.
+      patch=True):  # noqa: E501
+    #
+    # This update_resource_property method is used to update the property of the resource.
 
-      # Args:
-      #    resource_ids (dict): The Resource ids.
-      #    resource_properties (dict): The properties which you want to add/update.
-      #    patch (bool): PATCH or PUT request.
+    # Args:
+    #    resource_ids (dict): The Resource ids.
+    #    resource_properties (dict): The properties which you want to add/update.
+    #    patch (bool): PATCH or PUT request.
 
-      # Return:
-      #    REST response will be return.
-      #
-      if not resource_ids or not isinstance(resource_ids, dict):
-          raise ValueError(
-              'resourceId must provide and it should be type `dict`'
-          )
-      if not resource_properties or not isinstance(resource_properties, dict):
-          raise ValueError(
-              'resourceProperties must provide and it should be type `dict`'
-          )
-      for key in resource_properties:
-          if key.startswith('system.') or key.startswith('auto.'):
-              raise ValueError(
-                  'Properties can not have system or auto properties'
-              )
+    # Return:
+    #    REST response will be return.
+    #
+    if not resource_ids or not isinstance(resource_ids, dict):
+      raise ValueError(
+        'resourceId must provide and it should be type `dict`'
+      )
+    if not resource_properties or not isinstance(resource_properties, dict):
+      raise ValueError(
+        'resourceProperties must provide and it should be type `dict`'
+      )
+    for key in resource_properties:
+      if key.startswith('system.') or key.startswith('auto.'):
+        raise ValueError(
+          'Properties can not have system or auto properties'
+        )
 
-      payload = {}
-      payload['resourceIds'] = resource_ids
-      payload['resourceProperties'] = resource_properties
-      method = 'PATCH'
-      if not patch:
-          method = 'PUT'
-      return self.make_request(path='/resource_property/ingest', method=method,
-                               body=payload, async_req=False)
+    payload = {}
+    payload['resourceIds'] = resource_ids
+    payload['resourceProperties'] = resource_properties
+    method = 'PATCH'
+    if not patch:
+      method = 'PUT'
+    return self.make_request(path='/resource_property/ingest', method=method,
+                             body=payload, async_req=False)
 
   def update_instance_property(self, resource_ids, datasource, instancename,
-                               instance_properties, patch=True):  # noqa: E501
-      #
-      # This update_resource_property method is used to update the property of the resource.
+      instance_properties, patch=True):  # noqa: E501
+    #
+    # This update_resource_property method is used to update the property of the resource.
 
-      # Args:
-      #    resource_ids (dict): The Resource ids.
-      #    datasource (str): The datasource name.
-      #    instancename (str): The instance name.
-      #    instance_properties (dict): The properties which you want to add/update.
-      #    patch (bool): PATCH or PUT request.
+    # Args:
+    #    resource_ids (dict): The Resource ids.
+    #    datasource (str): The datasource name.
+    #    instancename (str): The instance name.
+    #    instance_properties (dict): The properties which you want to add/update.
+    #    patch (bool): PATCH or PUT request.
 
-      # Return:
-      #    REST response will be return.
+    # Return:
+    #    REST response will be return.
 
-      if not resource_ids or not isinstance(resource_ids, dict):
-          raise ValueError(
-              'resourceId must provide and it should be type `dict`'
-          )
-      if not datasource:
-          raise ValueError(
-              'dataSource must provide'
-          )
-      if not instancename:
-          raise ValueError(
-              'instanceName must provide'
-          )
-      if not instance_properties or not isinstance(instance_properties, dict):
-          raise ValueError(
-              'instanceProperties must provide and it should be type `dict`'
-          )
-      for key in instance_properties:
-          if key.startswith('system.') or key.startswith('auto.'):
-              raise ValueError(
-                  'Properties can not have system or auto properties'
-              )
-      payload = {}
-      payload['resourceIds'] = resource_ids
-      payload['dataSource'] = datasource
-      payload['instanceName'] = instancename
-      payload['instanceProperties'] = instance_properties
-      method = 'PATCH'
-      if not patch:
-          method = 'PUT'
-      return self.make_request(path='/instance_property/ingest', method=method,
-                               body=payload, async_req=False)
+    if not resource_ids or not isinstance(resource_ids, dict):
+      raise ValueError(
+        'resourceId must provide and it should be type `dict`'
+      )
+    if not datasource:
+      raise ValueError(
+        'dataSource must provide'
+      )
+    if not instancename:
+      raise ValueError(
+        'instanceName must provide'
+      )
+    if not instance_properties or not isinstance(instance_properties, dict):
+      raise ValueError(
+        'instanceProperties must provide and it should be type `dict`'
+      )
+    for key in instance_properties:
+      if key.startswith('system.') or key.startswith('auto.'):
+        raise ValueError(
+          'Properties can not have system or auto properties'
+        )
+    payload = {}
+    payload['resourceIds'] = resource_ids
+    payload['dataSource'] = datasource
+    payload['instanceName'] = instancename
+    payload['instanceProperties'] = instance_properties
+    method = 'PATCH'
+    if not patch:
+      method = 'PUT'
+    return self.make_request(path='/instance_property/ingest', method=method,
+                             body=payload, async_req=False)
 
   def _single_request(self, **kwargs):
       host = kwargs['resource']
@@ -308,19 +308,19 @@ datapoint=dp, values={ time.time() : '23'})
           self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
 
       try:
-          if isinstance(response, ApplyResult):
-              response = response.get()
-          else:
-              response = response
-          self._counter.update(BatchingCache._PAYLOAD_SEND)
-          self._response_handler(rest_request, response[0], response[1],
-                                 response[2])
+        if isinstance(response, ApplyResult):
+            response = response.get()
+        else:
+            response = response
+        self._counter.update(BatchingCache._PAYLOAD_SEND)
+        self._response_handler(rest_request, response[0], response[1],
+                               response[2])
       except ApiException as ex:
-          # logger.exception("Got Exception " + str(ex), exc_info=ex)
-          logger.exception("Got exception Status:%s body=%s reason:%s", ex.status,
-                           ex.body, ex.reason)
-          self._response_handler(rest_request, ex.body, ex.status, ex.headers,
-                                 ex.reason)
+        # logger.exception("Got Exception " + str(ex), exc_info=ex)
+        logger.exception("Got exception Status:%s body=%s reason:%s", ex.status,
+                         ex.body, ex.reason)
+        self._response_handler(rest_request, ex.body, ex.status, ex.headers,
+                               ex.reason)
       self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
 
   def _merge_request(self, single_request):

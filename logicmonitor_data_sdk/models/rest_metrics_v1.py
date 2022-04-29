@@ -69,9 +69,9 @@ class RestMetricsV1(object):
   }
 
   def __init__(self, data_source=None, data_source_display_name=None,
-               data_source_group=None, data_source_id=None, instances=None,
-               resource_description=None, resource_ids=None, resource_name=None,
-               resource_properties=None, singleInstanceDS=None):  # noqa: E501
+      data_source_group=None, data_source_id=None, instances=None,
+      resource_description=None, resource_ids=None, resource_name=None,
+      resource_properties=None, singleInstanceDS=None):  # noqa: E501
     """RestMetricsV1 - a model defined in Swagger"""  # noqa: E501
 
     self._data_source = None
