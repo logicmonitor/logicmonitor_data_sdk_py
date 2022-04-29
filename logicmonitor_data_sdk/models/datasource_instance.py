@@ -105,7 +105,7 @@ class DataSourceInstance(object):
   @display_name.setter
   def display_name(self, display_name):
     err_msg = objectNameValidator.check_instance_displayname_validation(
-      display_name)
+        display_name)
     if err_msg:
       raise ValueError(err_msg)
     self._display_name = display_name
@@ -141,7 +141,7 @@ class DataSourceInstance(object):
   @properties.setter
   def properties(self, properties):
     err_msg = objectNameValidator.check_instance_properties_validation(
-      properties)
+        properties)
     if err_msg:
       raise ValueError(err_msg)
     self._properties = properties
@@ -170,16 +170,16 @@ class DataSourceInstance(object):
       value = getattr(self, attr)
       if isinstance(value, list):
         result[attr] = list(map(
-          lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-          value
+            lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+            value
         ))
       elif hasattr(value, "to_dict"):
         result[attr] = value.to_dict()
       elif isinstance(value, dict):
         result[attr] = dict(map(
-          lambda item: (item[0], item[1].to_dict())
-          if hasattr(item[1], "to_dict") else item,
-          value.items()
+            lambda item: (item[0], item[1].to_dict())
+            if hasattr(item[1], "to_dict") else item,
+            value.items()
         ))
       else:
         if value != None:
@@ -207,6 +207,7 @@ class DataSourceInstance(object):
   def __ne__(self, other):
     """Returns true if both objects are not equal"""
     return not self == other
+
   def _valid_field(self):
     instanceId = self.instanceId
 
@@ -228,12 +229,12 @@ class DataSourceInstance(object):
 
       err_msg += objectNameValidator.check_instance_name_validation(self.name)
 
-      # instance_displayname Validations
-      err_msg += objectNameValidator.check_instance_displayname_validation(
+    # instance_displayname Validations
+    err_msg += objectNameValidator.check_instance_displayname_validation(
         self.display_name)
 
-      # instance_properties Validation
-      err_msg += objectNameValidator.check_instance_properties_validation(
+    # instance_properties Validation
+    err_msg += objectNameValidator.check_instance_properties_validation(
         self.properties)
 
     return err_msg

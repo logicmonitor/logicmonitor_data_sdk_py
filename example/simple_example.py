@@ -27,7 +27,7 @@ import logicmonitor_data_sdk
 from logicmonitor_data_sdk.api.metrics import Metrics
 from logicmonitor_data_sdk.api.response_interface import ResonseInterface
 from logicmonitor_data_sdk.models import DataSource, \
-    Resource, DataSourceInstance, DataPoint
+  Resource, DataSourceInstance, DataPoint
 
 # Configure SDK with Account and access information
 # On your LogicMonitor portal, create API token (LMv1) for user and get
@@ -53,17 +53,17 @@ class MyResponse(ResonseInterface):
 # Create api handle for Metrics use case (we also support Logs)
 metric_api = Metrics(batch=True,interval=10,response_callback=MyResponse())
 return_val = metric_api.send_metrics(
-    resource=Resource(
-        ids={"system.hostname": "SampleDevice"},  #Core Properties of the Resource
-        create=True,                              #Auto-create resource if does not exist
-        name="SampleDevice",                      #Name of the resource
-        properties={"using.sdk": "true"}),        #Additional Properties [Optional]
-    datasource=DataSource(
-        name="SampleDS"),                         #Name of data source is must. Rest optional
-    instance=DataSourceInstance(
-        name="SampleInstance"),                   #Name of instance is must. Rest optional
-    datapoint=DataPoint(
-        name="SampleDataPoint"),                  #The metric
-    values={str(int(time.time())): str(random())} #Values at specific time(s)
+               resource=Resource(
+                   ids={"system.hostname": "SampleDevice"},  #Core Properties of the Resource
+                   create=True,                              #Auto-create resource if does not exist
+                   name="SampleDevice",                      #Name of the resource
+                   properties={"using.sdk": "true"}),        #Additional Properties [Optional]
+               datasource=DataSource(
+                   name="SampleDS"),                         #Name of data source is must. Rest optional
+               instance=DataSourceInstance(
+                   name="SampleInstance"),                   #Name of instance is must. Rest optional
+               datapoint=DataPoint(
+                  name="SampleDataPoint"),                  #The metric
+               values={str(int(time.time())): str(random())} #Values at specific time(s)
 )
 print("Return Value = ",return_val)

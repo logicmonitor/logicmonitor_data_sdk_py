@@ -98,7 +98,7 @@ datapoint=dp, values={ time.time() : '23'})
     for key, val in six.iteritems(params['kwargs']):
       if key not in all_params:
         raise TypeError(
-          "Got an unexpected keyword argument '%s' to method SendMetrics" % key
+            "Got an unexpected keyword argument '%s' to method SendMetrics" % key
         )
       params[key] = val
     del params['kwargs']
@@ -107,8 +107,8 @@ datapoint=dp, values={ time.time() : '23'})
     for one in all_params:
       if not params.__contains__(one):
         raise TypeError(
-          "Some arguments are missing keys='%s'" %
-          str(params.keys())
+            "Some arguments are missing keys='%s'" %
+            str(params.keys())
         )
     # logger.debug("Request Send for {}".format(str(params['resource'].ids)))
     if self.batch:
@@ -136,16 +136,16 @@ datapoint=dp, values={ time.time() : '23'})
     #
     if not resource_ids or not isinstance(resource_ids, dict):
       raise ValueError(
-        'resourceId must provide and it should be type `dict`'
+          'resourceId must provide and it should be type `dict`'
       )
     if not resource_properties or not isinstance(resource_properties, dict):
       raise ValueError(
-        'resourceProperties must provide and it should be type `dict`'
+          'resourceProperties must provide and it should be type `dict`'
       )
     for key in resource_properties:
       if key.startswith('system.') or key.startswith('auto.'):
         raise ValueError(
-          'Properties can not have system or auto properties'
+            'Properties can not have system or auto properties'
         )
 
     payload = {}
@@ -174,24 +174,24 @@ datapoint=dp, values={ time.time() : '23'})
 
     if not resource_ids or not isinstance(resource_ids, dict):
       raise ValueError(
-        'resourceId must provide and it should be type `dict`'
+          'resourceId must provide and it should be type `dict`'
       )
     if not datasource:
       raise ValueError(
-        'dataSource must provide'
+          'dataSource must provide'
       )
     if not instancename:
       raise ValueError(
-        'instanceName must provide'
+          'instanceName must provide'
       )
     if not instance_properties or not isinstance(instance_properties, dict):
       raise ValueError(
-        'instanceProperties must provide and it should be type `dict`'
+          'instanceProperties must provide and it should be type `dict`'
       )
     for key in instance_properties:
       if key.startswith('system.') or key.startswith('auto.'):
         raise ValueError(
-          'Properties can not have system or auto properties'
+            'Properties can not have system or auto properties'
         )
     payload = {}
     payload['resourceIds'] = resource_ids
@@ -300,16 +300,16 @@ datapoint=dp, values={ time.time() : '23'})
           response = self.make_request(path='/v2/metric/ingest', method='POST',
                                        body=rest_request, create=create)
       except ApiException as ex:
-          # logger.exception("Got Exception " + str(ex), exc_info=ex)
-          logger.exception("Got exception Status:%s body=%s reason:%s", ex.status,
-                           ex.body, ex.reason)
-          self._response_handler(rest_request, ex.body, ex.status, ex.headers,
-                                 ex.reason)
-          self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
+        # logger.exception("Got Exception " + str(ex), exc_info=ex)
+        logger.exception("Got exception Status:%s body=%s reason:%s", ex.status,
+                         ex.body, ex.reason)
+        self._response_handler(rest_request, ex.body, ex.status, ex.headers,
+                               ex.reason)
+        self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
 
       try:
         if isinstance(response, ApplyResult):
-            response = response.get()
+          response = response.get()
         else:
             response = response
         self._counter.update(BatchingCache._PAYLOAD_SEND)
