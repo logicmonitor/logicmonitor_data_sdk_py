@@ -51,7 +51,8 @@ class RestMetricsV1(object):
     'resource_description': 'str',
     'resource_ids': 'MapStringString',
     'resource_name': 'str',
-    'resource_properties': 'MapStringString'
+    'resource_properties': 'MapStringString',
+    'singleInstanceDS': 'boolean'
   }
 
   attribute_map = {
@@ -63,13 +64,14 @@ class RestMetricsV1(object):
     'resource_description': 'resourceDescription',
     'resource_ids': 'resourceIds',
     'resource_name': 'resourceName',
-    'resource_properties': 'resourceProperties'
+    'resource_properties': 'resourceProperties',
+    'singleInstanceDS': 'singleInstanceDS'
   }
 
   def __init__(self, data_source=None, data_source_display_name=None,
       data_source_group=None, data_source_id=None, instances=None,
       resource_description=None, resource_ids=None, resource_name=None,
-      resource_properties=None):  # noqa: E501
+      resource_properties=None, singleInstanceDS=None):  # noqa: E501
     """RestMetricsV1 - a model defined in Swagger"""  # noqa: E501
 
     self._data_source = None
@@ -82,6 +84,7 @@ class RestMetricsV1(object):
     self._resource_name = None
     self._resource_properties = None
     self.discriminator = None
+    self._singleInstanceDS = None
 
     if data_source is not None:
       self.data_source = data_source
@@ -101,6 +104,8 @@ class RestMetricsV1(object):
       self.resource_name = resource_name
     if resource_properties is not None:
       self.resource_properties = resource_properties
+    if singleInstanceDS is not None:
+      self.singleInstanceDS = singleInstanceDS
 
   @property
   def data_source(self):
@@ -290,6 +295,14 @@ class RestMetricsV1(object):
     """
 
     self._resource_properties = resource_properties
+
+  @property
+  def singleInstanceDS(self):
+    return self._singleInstanceDS
+
+  @singleInstanceDS.setter
+  def singleInstanceDS(self, singleInstanceDS):
+    self._singleInstanceDS = singleInstanceDS
 
   def to_dict(self):
     """Returns the model properties as a dict"""

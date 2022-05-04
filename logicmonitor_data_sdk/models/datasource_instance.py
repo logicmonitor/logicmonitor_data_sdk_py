@@ -46,23 +46,26 @@ class DataSourceInstance(object):
     'description': 'str',
     'display_name': 'str',
     'name': 'str',
-    'properties': 'MapStringString'
+    'properties': 'MapStringString',
+    'instanceId': 'int'
   }
 
   attribute_map = {
     'description': 'instanceDescription',
     'display_name': 'instanceDisplayName',
     'name': 'instanceName',
-    'properties': 'instanceProperties'
+    'properties': 'instanceProperties',
+    'instanceId': 'instanceIdValue'
   }
 
   def __init__(self, name, description=None,
-      display_name=None, properties=None):  # noqa: E501
+      display_name=None, instanceId=None, properties=None):  # noqa: E501
 
     self._description = None
     self._display_name = None
     self._name = None
     self._properties = None
+    self._instanceId = None
     self.discriminator = None
 
     if description is not None:
@@ -73,6 +76,8 @@ class DataSourceInstance(object):
       self.name = name
     if properties is not None:
       self.properties = properties
+      if instanceId is not None:
+        self.instanceId = instanceId
     error_msg = self._valid_field()
     if error_msg is not None and len(error_msg) > 0:
       raise ValueError(error_msg)
@@ -141,6 +146,23 @@ class DataSourceInstance(object):
       raise ValueError(err_msg)
     self._properties = properties
 
+
+  @property
+  def instanceId(self):
+    """Instance ID. If no existing instance matches, a new instance is
+    created with this id. Either Instance Name or Instance Id is Mandatory
+
+    :return: The id of this DataSourceInstance.
+    :rtype: int
+    """
+    return self._instanceId
+
+  @instanceId.setter
+  def instanceId(self, instanceId):
+    if instanceId != None and instanceId < 0:
+      raise ValueError("DataSource Id {%s} should not be negative." % instanceId)
+    self._instanceId = instanceId
+
   def to_dict(self):
     result = {}
 
@@ -187,9 +209,25 @@ class DataSourceInstance(object):
     return not self == other
 
   def _valid_field(self):
+    instanceId = self.instanceId
+
     err_msg = ""
     # instance_name Validations
-    err_msg += objectNameValidator.check_instance_name_validation(self.name)
+    if instanceId is None or instanceId == 0:
+      err_msg += objectNameValidator.check_instance_name_validation(self.name)
+
+      # instance_displayname Validations
+      err_msg += objectNameValidator.check_instance_displayname_validation(
+        self.display_name)
+
+      # instance_properties Validation
+      err_msg += objectNameValidator.check_instance_properties_validation(
+        self.properties)
+    elif instanceId !=0:
+      if instanceId !=None and instanceId<0:
+        err_msg+="Instance ID {%s} should not be negative." % instanceId
+
+      err_msg += objectNameValidator.check_instance_name_validation(self.name)
 
     # instance_displayname Validations
     err_msg += objectNameValidator.check_instance_displayname_validation(

@@ -58,7 +58,7 @@ Please follow the :ref:`RST Installation`.
 
 Simple Example
 ==============
-The following example will create the new resource "SampleDevice" and data source called "PusMetricsDS".
+The following example will create the new resource "SampleDevice" and data source called "PushMetricsDS".
 Please specified the valid company name, user id and user keys.
 
 .. literalinclude:: ../../example/simple_example.py

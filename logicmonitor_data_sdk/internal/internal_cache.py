@@ -162,7 +162,7 @@ class BatchingCache(object):
       if self._response_callback and str(status) in ['200', '202']:
         self._response_callback.success_callback(request, response, status,
                                                  headers['x-request-id'])
-      if self._response_callback and int(status) >= 300:
+      if self._response_callback and int(status) >= 300 or int(status) == 207:
         self._response_callback.error_callback(request, response, status,
                                                headers['x-request-id'], reason)
     except Exception as ex:
@@ -211,7 +211,7 @@ class BatchingCache(object):
     path_params = {}
 
     query_params = []
-    if 'create' in params and path == '/metric/ingest':
+    if 'create' in params and path == '/v2/metric/ingest':
       query_params.append(('create', params['create']))  # noqa: E501
 
     if 'async_req' not in params:

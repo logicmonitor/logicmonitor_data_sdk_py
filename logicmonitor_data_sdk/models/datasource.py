@@ -38,6 +38,7 @@ class DataSource(object):
         the new group.
       id (:obj:`int`, optional): DataSource unique ID. Used only to match an existing DataSource.
         If no existing DataSource matches the provided ID, an error results.
+      singleInstanceDS (:obj:`boolean`,optional): DataSource singleInstance attribute. When set to true, only one DataSource Instance can be created.
 
   Examples:
       >>> from logicmonitor_data_sdk.models.datasource import DataSource
@@ -50,6 +51,7 @@ class DataSource(object):
     'display_name': 'str',
     'group': 'str',
     'id': 'int',
+    'singleInstanceDS': 'boolean'
   }
 
   attribute_map = {
@@ -57,15 +59,17 @@ class DataSource(object):
     'display_name': 'dataSourceDisplayName',
     'group': 'dataSourceGroup',
     'id': 'dataSourceId',
+    'singleInstanceDS': 'singleInstanceDS'
   }
 
   def __init__(self, name, display_name=None,
-      group=None, id=None):  # noqa: E501
+      group=None, id=None, singleInstanceDS = False):  # noqa: E501
 
     self._name = None
     self._display_name = None
     self._group = None
     self._id = None
+    self._singleInstanceDS = None
     self.discriminator = None
 
     if name is not None:
@@ -76,6 +80,10 @@ class DataSource(object):
       self.group = group
     if id != None:
       self.id = id
+
+    if singleInstanceDS is not None:
+      self.singleInstanceDS = singleInstanceDS
+
     error_msg = self._valid_field()
     if error_msg is not None and len(error_msg) > 0:
       raise ValueError(error_msg)
@@ -141,7 +149,7 @@ class DataSource(object):
     """DataSource unique ID. Used only to match an existing DataSource. If no
     existing DataSource matches the provided ID, an error results.
 
-    :return: The id of this DataSource.  # noqa: E501
+    :return: The id of this DataSource.
     :rtype: int
     """
     return self._id
@@ -151,6 +159,19 @@ class DataSource(object):
     if id != None and (id != 0 or id < 0):
       raise ValueError("DataSource Id {%s} should not be negative." % id)
     self._id = id
+
+  @property
+  def singleInstanceDS(self):
+    """DataSource singleInstanceDS attribute. When set to true, only one DataSource Instance can be created.
+
+    :return: The value of the singleInstanceDS attribute: true or false
+    :rtype: boolean
+    """
+    return self._singleInstanceDS
+
+  @singleInstanceDS.setter
+  def singleInstanceDS(self, singleInstanceDS):
+    self._singleInstanceDS = singleInstanceDS
 
   def to_dict(self):
     result = {}
