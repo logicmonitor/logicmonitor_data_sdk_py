@@ -216,7 +216,8 @@ datapoint=dp, values={ time.time() : '23'})
           data_point_description=data_point.description,
           data_point_name=data_point.name,
           data_point_type=data_point.type,
-          values=values)
+          values=values,
+          percentile=data_point.percentile)
       data_points.append(rest_data_point)
       rest_instance = RestDataSourceInstanceV1(
           instance_name=instance.name,
@@ -274,7 +275,8 @@ datapoint=dp, values={ time.time() : '23'})
                               data_point_description=data_point.description,
                               data_point_name=data_point.name,
                               data_point_type=data_point.type,
-                              values=values)
+                              values=values,
+                              percentile=data_point.percentile)
                           data_points.append(rest_data_point)
                   if datapoints_added:
                       rest_metrics = RestMetricsV1(resource_ids=host.ids,
