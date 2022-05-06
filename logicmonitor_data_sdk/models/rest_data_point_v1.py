@@ -46,7 +46,8 @@ class RestDataPointV1(object):
     'data_point_description': 'str',
     'data_point_name': 'str',
     'data_point_type': 'str',
-    'values': 'MapStringString'
+    'values': 'MapStringString',
+    'percentile':'int'
   }
 
   attribute_map = {
@@ -54,12 +55,13 @@ class RestDataPointV1(object):
     'data_point_description': 'dataPointDescription',
     'data_point_name': 'dataPointName',
     'data_point_type': 'dataPointType',
-    'values': 'values'
+    'values': 'values',
+    'percentile':'percentileValue'
   }
 
   def __init__(self, data_point_aggregation_type=None,
       data_point_description=None, data_point_name=None, data_point_type=None,
-      values=None):  # noqa: E501
+      values=None,percentile=None):  # noqa: E501
     """RestDataPointV1 - a model defined in Swagger"""  # noqa: E501
 
     self._data_point_aggregation_type = None
@@ -67,6 +69,7 @@ class RestDataPointV1(object):
     self._data_point_name = None
     self._data_point_type = None
     self._values = None
+    self._percentile = None
     self.discriminator = None
 
     if data_point_aggregation_type is not None:
@@ -79,6 +82,8 @@ class RestDataPointV1(object):
       self.data_point_type = data_point_type
     if values is not None:
       self.values = values
+    if percentile is not None:
+      self.percentile = percentile
 
   @property
   def data_point_aggregation_type(self):
@@ -184,6 +189,20 @@ class RestDataPointV1(object):
     """
 
     self._values = values
+
+  #Percentile
+  @property
+  def percentile(self):
+    """One of the Aggregation Type. Only set when aggregation_type is set as "percentile".
+
+    :return: The percentile of that datapoint between limit [0-100]
+    :rtype: int
+    """
+    return self._percentile
+
+  @percentile.setter
+  def percentile(self,percentile):
+    self._percentile = percentile
 
   def to_dict(self):
     """Returns the model properties as a dict"""
