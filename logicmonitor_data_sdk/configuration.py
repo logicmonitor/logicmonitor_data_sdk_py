@@ -61,9 +61,12 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key= 'API_ACCESS_KEY')
   """
 
-  def __init__(self, company=None, authentication=None, id=None, key=None):
+  def __init__(self, company=None, authentication=None, id=None, key=None,bearerToken=None):
     """Constructor"""
     # Default Base url
+    self._authentication = {}
+    self.bearerflag = False
+    self.LMV1authflag = False
     company = company or os.environ.get('LM_COMPANY')
     if company == None or company == '':
       raise ValueError(
@@ -79,23 +82,37 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       # type = os.environ.get('LM_ACCESS_TYPE', 'LMv1')
       if (id and key):
         authentication = {'id': id, 'key': key}
-    if not authentication or not isinstance(authentication,
-                                            dict) or 'id' not in authentication or 'key' not in authentication:
+        self.LMV1authflag = True
+
+    if authentication is None and bearerToken:
+      self._bearertoken = self.check_bearertoken(bearerToken)
+      self.bearerflag = True
+
+    if self.LMV1authflag and (not authentication or not isinstance(authentication,
+                                            dict) or 'id' not in authentication or 'key' not in authentication):
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )
-    if not objectNameValidator.is_valid_auth_id(authentication.get('id', None)):
+    if self.LMV1authflag and not objectNameValidator.is_valid_auth_id(authentication.get('id', None)):
       raise ValueError(
           'Invalid Access ID'
       )
-    if authentication.get('key', None):
+    if self.LMV1authflag and authentication.get('key', None):
       if not objectNameValidator.is_valid_auth_key(authentication.get('key', None)):
         raise ValueError(
           'Invalid Access Key'
         )
+
+    if authentication is None and bearerToken is None:
+      raise ValueError(
+        'Authentication must provide AccessID and AccessKey or Bearer Token'
+      )
     self._company = company
     self._host = "https://" + self._company + ".logicmonitor.com/rest"
-    self.check_authentication(authentication)
+    if self.LMV1authflag:
+      self.check_authentication(authentication)
+    elif self.bearerflag:
+      self.check_bearertoken(bearerToken)
     self._async_req = False
     # Temp file folder for downloading files
     self.temp_folder_path = None
@@ -271,6 +288,14 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
   def authentication(self, value):
     self.check_authentication(value)
 
+  @property
+  def bearertoken(self):
+    self._bearertoken
+
+  @bearertoken.setter
+  def bearertoken(self,value):
+    self.check_bearertoken(value)
+
   def check_authentication(self, authentication):
     if not authentication or not isinstance(authentication,
                                             dict) or 'id' not in authentication or 'key' not in authentication:
@@ -280,12 +305,20 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     self._authentication = authentication
     self._authentication['type'] = 'LMv1'
 
+  def check_bearertoken(self,bearertoken):
+    if not bearertoken:
+      raise ValueError(
+        'Authentication must provide Bearer token'
+      )
+    self._bearertoken = bearertoken
+    self._authentication['type'] = 'bearertoken'
+
   @property
   def host(self):
     return self._host
 
   def auth_settings(self):
-    if self._authentication != None and 'type' in self._authentication and 'key' in self._authentication and 'id' in self._authentication:
+    if self.LMV1authflag==True and self._authentication != None and 'type' in self._authentication and 'key' in self._authentication and 'id' in self._authentication:
       return {
         self._authentication['type']:
           {
@@ -295,6 +328,16 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
             'value': self._authentication['key'],
             'id': self._authentication['id']
           },
+      }
+    elif self.bearerflag==True and self._authentication is not None and self._bearertoken is not None:
+      return {
+        self._authentication['type']:
+          {
+            'type':'bearertoken',
+            'in' : 'header',
+            'key' : 'Authorization',
+            'value': self._bearertoken
+          }
       }
     else:
       return {
@@ -317,3 +360,9 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
         os=platform.system().lower(),
         arch=platform.machine().lower(),
     )
+  def ret_flags(self):
+    """Returns the status of the BearerTokenFlag and LMV1Flag variables
+
+    :return: A list with first element bearerflag and second element LMV1authflag
+    """
+    return [self.bearerflag,self.LMV1authflag]

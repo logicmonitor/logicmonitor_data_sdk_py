@@ -26,6 +26,7 @@ import logicmonitor_data_sdk
 #
 from logicmonitor_data_sdk.api.metrics import Metrics
 from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api_client import ApiClient
 from logicmonitor_data_sdk.models import DataSource, \
   Resource, DataSourceInstance, DataPoint
 
@@ -51,7 +52,8 @@ class MyResponse(ResonseInterface):
 
 
 # Create api handle for Metrics use case (we also support Logs)
-metric_api = Metrics(batch=True,interval=10,response_callback=MyResponse())
+api_client = ApiClient(configuration=configuration)
+metric_api = Metrics(batch=False,interval=10,response_callback=MyResponse(),api_client=api_client)
 return_val = metric_api.send_metrics(
                resource=Resource(
                    ids={"system.hostname": "SampleDevice"},  #Core Properties of the Resource
