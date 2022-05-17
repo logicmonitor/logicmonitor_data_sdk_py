@@ -66,7 +66,6 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     # Default Base url
     self._authentication = {}
     self.bearerflag = False
-    self.LMV1authflag = False
     company = company or os.environ.get('LM_COMPANY')
     if company == None or company == '':
       raise ValueError(
@@ -82,22 +81,23 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       # type = os.environ.get('LM_ACCESS_TYPE', 'LMv1')
       if (id and key):
         authentication = {'id': id, 'key': key}
-        self.LMV1authflag = True
+      elif not bearerToken:
+        bearerToken = os.environ.get('LM_BEARER_TOKEN',bearerToken)
 
     if authentication is None and bearerToken:
       self._bearertoken = self.check_bearertoken(bearerToken)
       self.bearerflag = True
 
-    if self.LMV1authflag and (not authentication or not isinstance(authentication,
+    if not self.bearerflag and (not authentication or not isinstance(authentication,
                                             dict) or 'id' not in authentication or 'key' not in authentication):
       raise ValueError(
           'Authentication must provide the `id` and `key`'
       )
-    if self.LMV1authflag and not objectNameValidator.is_valid_auth_id(authentication.get('id', None)):
+    if not self.bearerflag and not objectNameValidator.is_valid_auth_id(authentication.get('id', None)):
       raise ValueError(
           'Invalid Access ID'
       )
-    if self.LMV1authflag and authentication.get('key', None):
+    if not self.bearerflag and authentication.get('key', None):
       if not objectNameValidator.is_valid_auth_key(authentication.get('key', None)):
         raise ValueError(
           'Invalid Access Key'
@@ -109,7 +109,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       )
     self._company = company
     self._host = "https://" + self._company + ".logicmonitor.com/rest"
-    if self.LMV1authflag:
+    if not self.bearerflag:
       self.check_authentication(authentication)
     elif self.bearerflag:
       self.check_bearertoken(bearerToken)
@@ -303,7 +303,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
           'Authentication must provide the `id` and `key`'
       )
     self._authentication = authentication
-    self._authentication['type'] = 'LMv1'
+    self._authentication['type'] = 'LMV1'
 
   def check_bearertoken(self,bearertoken):
     if not bearertoken:
@@ -318,7 +318,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     return self._host
 
   def auth_settings(self):
-    if self.LMV1authflag==True and self._authentication != None and 'type' in self._authentication and 'key' in self._authentication and 'id' in self._authentication:
+    if self.bearerflag==False and self._authentication != None and 'type' in self._authentication and 'key' in self._authentication and 'id' in self._authentication:
       return {
         self._authentication['type']:
           {
@@ -361,8 +361,8 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
         arch=platform.machine().lower(),
     )
   def ret_flags(self):
-    """Returns the status of the BearerTokenFlag and LMV1Flag variables
+    """Returns the status of the BearerTokenFlag
 
-    :return: A list with first element bearerflag and second element LMV1authflag
+    :return: A list with first element as bearerflag
     """
-    return [self.bearerflag,self.LMV1authflag]
+    return [self.bearerflag]

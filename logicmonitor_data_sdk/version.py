@@ -8,4 +8,4 @@ one at https://mozilla.org/MPL/2.0/.
 =======
 """
 
-__version__ = "0.0.2.beta2"
+__version__ = "0.0.4.beta1"
