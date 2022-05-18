@@ -237,7 +237,7 @@ class BatchingCache(object):
     auth_type_list = self.api_client.configuration.ret_flags()
     if auth_type_list[0]:
       auth_settings = ['bearertoken']
-    elif auth_type_list[1]:
+    else:
       auth_settings = ['LMV1'] # noqa: E501
     # if the response type is a file, set _preload_content_value=false.
     # Because python 3.0+ 'utf-8' codec can't decode the binary string
