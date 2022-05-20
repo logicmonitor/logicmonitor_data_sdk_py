@@ -310,7 +310,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       raise ValueError(
         'Authentication must provide Bearer token'
       )
-    self._bearertoken = bearertoken
+    self._bearertoken = "Bearer " + bearertoken
     self._authentication['type'] = 'bearertoken'
 
   @property
