@@ -303,7 +303,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
           'Authentication must provide the `id` and `key`'
       )
     self._authentication = authentication
-    self._authentication['type'] = 'LMV1'
+    self._authentication['type'] = 'LMv1'
 
   def check_bearertoken(self,bearertoken):
     if not bearertoken:
@@ -341,7 +341,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
       }
     else:
       return {
-        'LMv1': {'type': 'api_key',
+        'LMv1_empty': {'type': 'api_key',
                  'in': 'header',
                  'key': 'Authorization',
                  'value': '',
