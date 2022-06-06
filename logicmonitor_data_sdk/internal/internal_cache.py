@@ -64,7 +64,11 @@ class BatchingCache(object):
     self._last_time_send = int(time.time())
     self.__init = True
     self._batch = batch
-    self._interval = interval
+    if interval:
+      if isinstance(interval,int):
+        self._interval = interval
+      else:
+        raise ValueError(" 'interval' accepts only integer values")
     # self._size = size
     self._size = None
     self._request_cb = request_cb
@@ -238,7 +242,7 @@ class BatchingCache(object):
     if auth_type_list[0]:
       auth_settings = ['bearertoken']
     else:
-      auth_settings = ['LMV1'] # noqa: E501
+      auth_settings = ['LMv1'] # noqa: E501
     # if the response type is a file, set _preload_content_value=false.
     # Because python 3.0+ 'utf-8' codec can't decode the binary string
     _response_type = 'PushMetricAPIResponse'
