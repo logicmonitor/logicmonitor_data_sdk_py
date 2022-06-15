@@ -42,32 +42,62 @@ class PushMetricAPIResponse(object):
                           and the value is json key in definition.
   """
   swagger_types = {
+    'code': 'int',
     'message': 'str',
     'resource_ids': 'MapStringString',
-    'timestamp': 'int'
+    'timestamp': 'int',
+    'errors': 'MapStringString'
   }
 
   attribute_map = {
+    'code': 'code',
     'message': 'message',
     'resource_ids': 'resourceIds',
-    'timestamp': 'timestamp'
+    'timestamp': 'timestamp',
+    'errors': 'error'
   }
 
-  def __init__(self, message=None, resource_ids=None,
-      timestamp=None):  # noqa: E501
+  def __init__(self, code=None, message=None, resource_ids=None,
+      timestamp=None, errors=None):  # noqa: E501
     """PushMetricAPIResponse - a model defined in Swagger"""  # noqa: E501
 
     self._message = None
+    self._code = None
     self._resource_ids = None
     self._timestamp = None
+    self._errors = None
     self.discriminator = None
 
+    if code is not None:
+      self.code = code
     if message is not None:
       self.message = message
     if resource_ids is not None:
       self.resource_ids = resource_ids
     if timestamp is not None:
       self.timestamp = timestamp
+    if errors is not None:
+      self.errors = errors
+
+  @property
+  def code(self):
+    """Gets the status code of this PushMetricAPIResponse.  # noqa: E501
+
+
+    :return: The status code of this PushMetricAPIResponse.  # noqa: E501
+    :rtype: list
+    """
+    return self._code
+
+  @code.setter
+  def code(self, code):
+    """Sets the status code of this PushMetricAPIResponse.  # noqa: E501
+
+
+    :return: The status code of this PushMetricAPIResponse.  # noqa: E501
+    :rtype: list
+    """
+    self._code = code
 
   @property
   def message(self):
@@ -132,6 +162,26 @@ class PushMetricAPIResponse(object):
 
     self._timestamp = timestamp
 
+  @property
+  def errors(self):
+    """Gets the errors of this PushMetricAPIResponse.  # noqa: E501
+
+
+    :return: The errors of this PushMetricAPIResponse.  # noqa: E501
+    :rtype: list
+    """
+    return self._errors
+
+  @errors.setter
+  def errors(self, errors):
+    """Sets the errors of this PushMetricAPIResponse.  # noqa: E501
+
+
+    :return: The errors of this PushMetricAPIResponse.  # noqa: E501
+    :rtype: list
+    """
+    self._errors = errors
+
   def to_dict(self):
     """Returns the model properties as a dict"""
     result = {}
@@ -140,16 +190,16 @@ class PushMetricAPIResponse(object):
       value = getattr(self, attr)
       if isinstance(value, list):
         result[attr] = list(map(
-            lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-            value
+          lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+          value
         ))
       elif hasattr(value, "to_dict"):
         result[attr] = value.to_dict()
       elif isinstance(value, dict):
         result[attr] = dict(map(
-            lambda item: (item[0], item[1].to_dict())
-            if hasattr(item[1], "to_dict") else item,
-            value.items()
+          lambda item: (item[0], item[1].to_dict())
+          if hasattr(item[1], "to_dict") else item,
+          value.items()
         ))
       else:
         result[attr] = value
