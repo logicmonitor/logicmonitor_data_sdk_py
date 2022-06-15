@@ -190,8 +190,10 @@ class ApiClient(object):
     if _return_http_data_only:
       return (return_data)
     else:
-      return (return_data, response_data.status,
-              response_data.getheaders())
+      return_data.errors = json.loads(response_data.data)['errors']
+      if len(json.loads(response_data.data)['errors'])>0:
+        return_data.resource_ids = json.loads(response_data.data)['errors'][0]['resourceIds']
+      return return_data
 
   def sanitize_for_serialization(self, obj):
     if obj is None:
