@@ -61,11 +61,12 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key= 'API_ACCESS_KEY')
   """
 
-  def __init__(self, company=None, authentication=None, id=None, key=None,bearerToken=None):
+  def __init__(self, company=None, authentication=None, id=None, key=None, gzip_flag=True, bearerToken=None):
     """Constructor"""
     # Default Base url
     self._authentication = {}
     self.bearerflag = False
+    self.gzip_flag = gzip_flag
     company = company or os.environ.get('LM_COMPANY')
     if company == None or company == '':
       raise ValueError(
@@ -295,6 +296,14 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
   @bearertoken.setter
   def bearertoken(self,value):
     self.check_bearertoken(value)
+
+  @property
+  def gzip_flag(self):
+    return self._gzip_flag
+
+  @gzip_flag.setter
+  def gzip_flag(self,value):
+    self._gzip_flag = value
 
   def check_authentication(self, authentication):
     if not authentication or not isinstance(authentication,

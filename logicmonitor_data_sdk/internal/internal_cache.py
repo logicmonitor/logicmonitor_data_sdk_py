@@ -165,10 +165,10 @@ class BatchingCache(object):
     try:
       if self._response_callback and str(status) in ['200', '202']:
         self._response_callback.success_callback(request, response, status,
-                                                 headers['x-request-id'])
+                                                 headers)
       if self._response_callback and int(status) >= 300 or int(status) == 207:
         self._response_callback.error_callback(request, response, status,
-                                               headers['x-request-id'], reason)
+                                               headers, reason)
     except Exception as ex:
       logger.exception("Got Exception in response callback " + str(ex))
 
@@ -192,7 +192,7 @@ class BatchingCache(object):
   def UnLock(self):
     self._lock.release()
 
-  def make_request(self, path, method, **kwargs):  # noqa: E501
+  def make_request(self, path, method, api_type=None, gzip_flag=None, **kwargs):  # noqa: E501
 
     all_params = ['create', 'body']  # noqa: E501
     all_params.append('async_req')
@@ -255,6 +255,8 @@ class BatchingCache(object):
         path_params,
         query_params,
         header_params,
+        api_type=api_type,
+        gzip_flag=gzip_flag,
         body=body_params,
         post_params=form_params,
         files=local_var_files,

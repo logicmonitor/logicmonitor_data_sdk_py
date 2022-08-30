@@ -29,6 +29,7 @@ from logicmonitor_data_sdk.api.response_interface import ResonseInterface
 from logicmonitor_data_sdk.api_client import ApiClient
 from logicmonitor_data_sdk.models import DataSource, \
   Resource, DataSourceInstance, DataPoint
+from example import system_properties
 
 # Configure SDK with Account and access information
 # On your LogicMonitor portal, create API token (LMv1) for user and get
@@ -59,7 +60,7 @@ return_val = metric_api.send_metrics(
                    ids={"system.hostname": "SampleDevice"},  #Core Properties of the Resource
                    create=True,                              #Auto-create resource if does not exist
                    name="SampleDevice",                      #Name of the resource
-                   properties={"using.sdk": "true"}),        #Additional Properties [Optional]
+                   properties=system_properties.get_system_info()),        #Additional Properties [Optional]
                datasource=DataSource(
                    name="SampleDS"),                         #Name of data source is must. Rest optional
                instance=DataSourceInstance(

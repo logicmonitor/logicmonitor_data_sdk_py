@@ -34,10 +34,19 @@ import logicmonitor_data_sdk.models
 from logicmonitor_data_sdk import rest
 from logicmonitor_data_sdk.configuration import Configuration
 from logicmonitor_data_sdk.version import __version__
+import io
+import gzip
+import urllib3.response
 
 # python 2 and python 3 compatibility library
 
 logger = logging.getLogger('lmdata.api')
+metrics_company_and_method_based_counter = {}
+metrics_method_based_last_time = {}
+logs_company_and_method_based_counter = {}
+logs_method_based_last_time = {}
+requestLimit = 100
+timeInSec = 60
 
 
 class ApiClient(object):
@@ -115,7 +124,7 @@ class ApiClient(object):
       query_params=None, header_params=None, body=None, post_params=None,
       files=None, response_type=None, auth_settings=None,
       _return_http_data_only=None, collection_formats=None,
-      _preload_content=True, _request_timeout=None):
+      _preload_content=True, _request_timeout=None, api_type=None, gzip_flag=None):
     config = self.configuration
 
     # header parameters
@@ -170,12 +179,25 @@ class ApiClient(object):
         body,
         files)
 
+    # gzip compression
+    body = json.dumps(body)
+    if gzip_flag is None:
+        gzip_flag = config.gzip_flag
+    if gzip_flag:
+        buf = io.BytesIO()
+        with gzip.GzipFile(mode='wb', fileobj=buf) as file:
+            file.write(body.encode("utf-8"))
+        file.close()
+        compressed = buf.getvalue()
+        header_params.update({'Content-Encoding': 'gzip'})
+        body = compressed
+
     # perform request and return response
-    response_data = self.request(
+    response_data = self.request_limit_handler(
         method, url, query_params=query_params, headers=header_params,
         post_params=post_params, body=body,
         _preload_content=_preload_content,
-        _request_timeout=_request_timeout)
+        _request_timeout=_request_timeout, api_type=api_type)
 
     self.last_response = response_data
 
@@ -190,10 +212,7 @@ class ApiClient(object):
     if _return_http_data_only:
       return (return_data)
     else:
-      return_data.errors = json.loads(response_data.data)['errors']
-      if len(json.loads(response_data.data)['errors'])>0:
-        return_data.resource_ids = json.loads(response_data.data)['errors'][0]['resourceIds']
-      return return_data
+      return (return_data, response_data.status,response_data.getheaders())
 
   def sanitize_for_serialization(self, obj):
     if obj is None:
@@ -283,11 +302,12 @@ class ApiClient(object):
       body=None, post_params=None, files=None,
       response_type=None, auth_settings=None, async_req=None,
       _return_http_data_only=None, collection_formats=None,
-      _preload_content=True, _request_timeout=None):
+      _preload_content=True, _request_timeout=None, gzip_flag=None, api_type=None):
     """Makes the HTTP request (synchronous) and returns deserialized data.
 
     To make an async request, set the async_req parameter.
 
+    :param gzip_flag: flag for gzip compression
     :param resource_path: Path to method endpoint.
     :param method: Method to call.
     :param path_params: Path parameters in the url.
@@ -328,7 +348,7 @@ class ApiClient(object):
                              body, post_params, files,
                              response_type, auth_settings,
                              _return_http_data_only, collection_formats,
-                             _preload_content, _request_timeout)
+                             _preload_content, _request_timeout, gzip_flag, api_type)
     else:
       thread = self.pool.apply_async(self.__call_api, (resource_path,
                                                        method, path_params,
@@ -340,68 +360,128 @@ class ApiClient(object):
                                                        _return_http_data_only,
                                                        collection_formats,
                                                        _preload_content,
-                                                       _request_timeout))
+                                                       _request_timeout,
+                                                       gzip_flag,
+                                                       api_type))
     return thread
 
-  def request(self, method, url, query_params=None, headers=None,
-      post_params=None, body=None, _preload_content=True,
-      _request_timeout=None):
-    if method == "GET":
-      return self.rest_client.GET(url,
-                                  query_params=query_params,
-                                  _preload_content=_preload_content,
-                                  _request_timeout=_request_timeout,
-                                  headers=headers)
-    elif method == "HEAD":
-      return self.rest_client.HEAD(url,
-                                   query_params=query_params,
-                                   _preload_content=_preload_content,
-                                   _request_timeout=_request_timeout,
-                                   headers=headers)
-    elif method == "OPTIONS":
-      return self.rest_client.OPTIONS(url,
-                                      query_params=query_params,
-                                      headers=headers,
-                                      post_params=post_params,
-                                      _preload_content=_preload_content,
-                                      _request_timeout=_request_timeout,
-                                      body=body)
-    elif method == "POST":
-      return self.rest_client.POST(url,
-                                   query_params=query_params,
-                                   headers=headers,
-                                   post_params=post_params,
-                                   _preload_content=_preload_content,
-                                   _request_timeout=_request_timeout,
-                                   body=body)
-    elif method == "PUT":
-      return self.rest_client.PUT(url,
-                                  query_params=query_params,
-                                  headers=headers,
-                                  post_params=post_params,
-                                  _preload_content=_preload_content,
-                                  _request_timeout=_request_timeout,
-                                  body=body)
-    elif method == "PATCH":
-      return self.rest_client.PATCH(url,
-                                    query_params=query_params,
-                                    headers=headers,
-                                    post_params=post_params,
-                                    _preload_content=_preload_content,
-                                    _request_timeout=_request_timeout,
-                                    body=body)
-    elif method == "DELETE":
-      return self.rest_client.DELETE(url,
-                                     query_params=query_params,
-                                     headers=headers,
-                                     _preload_content=_preload_content,
-                                     _request_timeout=_request_timeout,
-                                     body=body)
+  def request(self, request_params):
+    if request_params["method"] == "GET":
+      return self.rest_client.GET(request_params["url"],
+                                  query_params=request_params["query_params"],
+                                  _preload_content=request_params["_preload_content"],
+                                  _request_timeout=request_params["_request_timeout"],
+                                  headers=request_params["headers"])
+    elif request_params["method"] == "HEAD":
+      return self.rest_client.HEAD(request_params["url"],
+                                   query_params=request_params["query_params"],
+                                   _preload_content=request_params["_preload_content"],
+                                   _request_timeout=request_params["_request_timeout"],
+                                   headers=request_params["headers"])
+    elif request_params["method"] == "OPTIONS":
+      return self.rest_client.OPTIONS(request_params["url"],
+                                      query_params=request_params["query_params"],
+                                      headers=request_params["headers"],
+                                      post_params=request_params["post_params"],
+                                      _preload_content=request_params["_preload_content"],
+                                      _request_timeout=request_params["_request_timeout"],
+                                      body=request_params["body"])
+    elif request_params["method"] == "POST":
+      return self.rest_client.POST(request_params["url"],
+                                   query_params=request_params["query_params"],
+                                   headers=request_params["headers"],
+                                   post_params=request_params["post_params"],
+                                   _preload_content=request_params["_preload_content"],
+                                   _request_timeout=request_params["_request_timeout"],
+                                   body=request_params["body"])
+    elif request_params["method"] == "PUT":
+      return self.rest_client.PUT(request_params["url"],
+                                  query_params=request_params["query_params"],
+                                  headers=request_params["headers"],
+                                  post_params=request_params["post_params"],
+                                  _preload_content=request_params["_preload_content"],
+                                  _request_timeout=request_params["_request_timeout"],
+                                  body=request_params["body"])
+    elif request_params["method"] == "PATCH":
+      return self.rest_client.PATCH(request_params["url"],
+                                    query_params=request_params["query_params"],
+                                    headers=request_params["headers"],
+                                    post_params=request_params["post_params"],
+                                    _preload_content=request_params["_preload_content"],
+                                    _request_timeout=request_params["_request_timeout"],
+                                    body=request_params["body"])
+    elif request_params["method"] == "DELETE":
+      return self.rest_client.DELETE(request_params["url"],
+                                     query_params=request_params["query_params"],
+                                     headers=request_params["headers"],
+                                     _preload_content=request_params["_preload_content"],
+                                     _request_timeout=request_params["_request_timeout"],
+                                     body=request_params["body"])
     else:
       raise ValueError(
           "http method must be `GET`, `HEAD`, `OPTIONS`,"
           " `POST`, `PATCH`, `PUT` or `DELETE`."
       )
+
+  def request_limit_handler(self, method, url, query_params=None, headers=None, post_params=None,
+                            body=None, _preload_content=True, _request_timeout=None, api_type=None,):
+    request_params = {"method": method, "url": url, "query_params": query_params, "headers": headers,
+                      "post_params": post_params, "body": body, "_preload_content": _preload_content,
+                      "_request_timeout": _request_timeout, "api_type": api_type}
+    dummy_response = urllib3.response.HTTPResponse(status=413, reason="OK",
+                                                   body='{"code": 413, "errors": [],''"message": "The number of '
+                                                        'requests exceeds the rate limit.", ''"timestamp": ' + str(
+                                                     int(time.time())) + '}')
+    company = self.configuration._company
+    if request_params["api_type"] == "metrics":
+      if company in metrics_company_and_method_based_counter.keys():
+        if request_params["method"] + "_counter" in metrics_company_and_method_based_counter[company].keys():
+          metrics_company_and_method_based_counter[company][request_params["method"] + "_counter"] += 1
+        else:
+          metrics_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 1
+          metrics_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(
+            time.time())
+      else:
+        metrics_company_and_method_based_counter[company] = {}
+        metrics_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 1
+        metrics_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(
+          time.time())
+      current_time = int(time.time())
+      timediff = current_time - metrics_method_based_last_time[
+        company + "_" + request_params["method"] + "_last_time"]
+      if metrics_company_and_method_based_counter[company][
+        request_params["method"] + "_counter"] >= requestLimit and timediff <= timeInSec:
+        time.sleep(1)
+        return dummy_response
+      if timediff >= timeInSec:
+        metrics_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 0
+        metrics_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(
+          time.time())
+      return self.request(request_params)
+    else:
+      if company in logs_company_and_method_based_counter.keys():
+        if request_params["method"] + "_counter" in logs_company_and_method_based_counter[company].keys():
+          logs_company_and_method_based_counter[company][request_params["method"] + "_counter"] += 1
+        else:
+          logs_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 1
+          logs_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(
+            time.time())
+      else:
+        logs_company_and_method_based_counter[company] = {}
+        logs_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 0
+        logs_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(time.time())
+      current_time = int(time.time())
+      timediff = current_time - logs_method_based_last_time[
+        company + "_" + request_params["method"] + "_last_time"]
+      if logs_company_and_method_based_counter[company][
+        request_params["method"] + "_counter"] >= requestLimit and timediff <= timeInSec:
+        time.sleep(1)
+        return dummy_response
+      if timediff >= timeInSec:
+        logs_company_and_method_based_counter[company][request_params["method"] + "_counter"] = 0
+        logs_method_based_last_time[company + "_" + request_params["method"] + "_last_time"] = int(
+          time.time())
+      return self.request(request_params)
 
   def parameters_to_tuples(self, params, collection_formats):
     new_params = []

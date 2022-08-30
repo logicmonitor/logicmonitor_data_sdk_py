@@ -27,6 +27,9 @@ from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 # python 2 and python 3 compatibility library
 from logicmonitor_data_sdk.rest import ApiException
 from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
+import gzip
+import io
+import json
 
 objectNameValidator = ObjectNameValidator()
 
@@ -236,9 +239,21 @@ datapoint=dp, values={ time.time() : '23'})
                                    data_source_id=datasource.id,
                                    instances=instances,
                                    singleInstanceDS=datasource.singleInstanceDS)
+      # size limiting
+      if instances is not None and len(instances) > 100:
+          return None
+      serialized_rest_metrics = self.api_client.sanitize_for_serialization([rest_metrics])
+      single_request_json = json.dumps(serialized_rest_metrics)
+      buf_single_request = io.BytesIO()
+      with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
+          file.write(single_request_json.encode("utf-8"))
+      file.close()
+      compressed_single_request = buf_single_request.getvalue()
+      if compressed_single_request.__sizeof__() > 104858 or serialized_rest_metrics.__sizeof__() > 1048576:
+          return None
       return self.make_request(path='/v2/metric/ingest', method='POST',
                                body=[rest_metrics], create=host.create,
-                               async_req=False)
+                               async_req=False, api_type="metrics")
 
   def _do_request(self):
       rest_request = []
@@ -247,50 +262,7 @@ datapoint=dp, values={ time.time() : '23'})
           self.Lock()
           logger.debug("Calling do request")
           self._counter.update(BatchingCache._PAYLOAD_BUILD)
-          for host, dsvalues in self._payload_cache.items():
-              for datasource, instanceValues in dsvalues.items():
-                  datapoints_added = False
-                  instances = []
-                  for instance, datapointsValues in instanceValues.items():
-                      data_points = []
-                      if not datasource.singleInstanceDS:
-                          error_msg = self._valid_field(instance)
-                          if error_msg is not None and len(error_msg) > 0:
-                              raise ValueError(error_msg)
-                      rest_instance = RestDataSourceInstanceV1(
-                          instance_name=instance.name,
-                          instance_display_name=instance.display_name,
-                          instance_properties=instance.properties,
-                          instance_description=instance.description,
-                          data_points=data_points)
-                      instances.append(rest_instance)
-                      for data_point, v in datapointsValues.items():
-                          values = {}
-                          for key, value in v.items():
-                              values[str(key)] = str(value)
-                              datapoints_added = True
-
-                          rest_data_point = RestDataPointV1(
-                              data_point_aggregation_type=data_point.aggregation_type,
-                              data_point_description=data_point.description,
-                              data_point_name=data_point.name,
-                              data_point_type=data_point.type,
-                              values=values,
-                              percentile=data_point.percentile)
-                          data_points.append(rest_data_point)
-                  if datapoints_added:
-                      rest_metrics = RestMetricsV1(resource_ids=host.ids,
-                                                   resource_name=host.name,
-                                                   resource_properties=host.properties,
-                                                   resource_description=host.description,
-                                                   data_source=datasource.name,
-                                                   data_source_display_name=datasource.display_name,
-                                                   data_source_group=datasource.group,
-                                                   data_source_id=datasource.id,
-                                                   instances=instances,
-                                                   singleInstanceDS=datasource.singleInstanceDS)
-                      create=host.create
-              rest_request.append(rest_metrics)
+          rest_request, create = self.rest_metrics_conversion()
           self.get_payload().clear()
       finally:
           self.UnLock()
@@ -300,7 +272,7 @@ datapoint=dp, values={ time.time() : '23'})
       try:
           logger.debug("Sending request as '%s'", rest_request)
           response = self.make_request(path='/v2/metric/ingest', method='POST',
-                                       body=rest_request, create=create)
+                                       body=rest_request, create=create, api_type="metrics")
       except ApiException as ex:
         # logger.exception("Got Exception " + str(ex), exc_info=ex)
         logger.exception("Got exception Status:%s body=%s reason:%s", ex.status,
@@ -326,6 +298,24 @@ datapoint=dp, values={ time.time() : '23'})
       self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
 
   def _merge_request(self, single_request):
+      # size limiting
+      rest_request, _ = self.rest_metrics_conversion()
+      payload_cache = json.dumps(self.api_client.sanitize_for_serialization(rest_request))
+      buf_payload_cache = io.BytesIO()
+      with gzip.GzipFile(mode='wb', fileobj=buf_payload_cache) as file:
+          file.write(payload_cache.encode("utf-8"))
+      file.close()
+      compressed_payload_cache = buf_payload_cache.getvalue()
+      serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
+      single_request_json = json.dumps(serialized_single_request)
+      buf_single_request = io.BytesIO()
+      with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
+          file.write(single_request_json.encode("utf-8"))
+      file.close()
+      compressed_single_request = buf_single_request.getvalue()
+      if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > 104858) or \
+              (self._payload_cache.__sizeof__() + single_request.__sizeof__() > 1048576):
+          pass
       resource = single_request['resource']
       datasource = single_request['datasource']
       instance = single_request['instance']
@@ -340,6 +330,8 @@ datapoint=dp, values={ time.time() : '23'})
           payload_host[datasource] = {}
           payload_ds = payload_host[datasource]
       payload_instance = payload_ds.get(instance)
+      if payload_instance is not None and len(payload_instance) > 100:
+          pass
       if payload_instance == None:
           payload_ds[instance] = {}
           payload_instance = payload_ds[instance]
@@ -379,3 +371,52 @@ datapoint=dp, values={ time.time() : '23'})
               instance.properties)
 
       return err_msg
+
+  def rest_metrics_conversion(self):
+      rest_request = []
+      create = None
+      for host, dsvalues in self._payload_cache.items():
+          for datasource, instanceValues in dsvalues.items():
+              datapoints_added = False
+              instances = []
+              for instance, datapointsValues in instanceValues.items():
+                  data_points = []
+                  if not datasource.singleInstanceDS:
+                      error_msg = self._valid_field(instance)
+                      if error_msg is not None and len(error_msg) > 0:
+                          raise ValueError(error_msg)
+                  rest_instance = RestDataSourceInstanceV1(
+                      instance_name=instance.name,
+                      instance_display_name=instance.display_name,
+                      instance_properties=instance.properties,
+                      instance_description=instance.description,
+                      data_points=data_points)
+                  instances.append(rest_instance)
+                  for data_point, v in datapointsValues.items():
+                      values = {}
+                      for key, value in v.items():
+                          values[str(key)] = str(value)
+                          datapoints_added = True
+
+                      rest_data_point = RestDataPointV1(
+                          data_point_aggregation_type=data_point.aggregation_type,
+                          data_point_description=data_point.description,
+                          data_point_name=data_point.name,
+                          data_point_type=data_point.type,
+                          values=values,
+                          percentile=data_point.percentile)
+                      data_points.append(rest_data_point)
+              if datapoints_added:
+                  rest_metrics = RestMetricsV1(resource_ids=host.ids,
+                                               resource_name=host.name,
+                                               resource_properties=host.properties,
+                                               resource_description=host.description,
+                                               data_source=datasource.name,
+                                               data_source_display_name=datasource.display_name,
+                                               data_source_group=datasource.group,
+                                               data_source_id=datasource.id,
+                                               instances=instances,
+                                               singleInstanceDS=datasource.singleInstanceDS)
+                  create = host.create
+          rest_request.append(rest_metrics)
+      return rest_request, create

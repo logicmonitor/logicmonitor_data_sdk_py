@@ -25,6 +25,9 @@ import six
 from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 # python 2 and python 3 compatibility library
 from logicmonitor_data_sdk.rest import ApiException
+import json
+import gzip
+import io
 
 logger = logging.getLogger('lmdata.api')
 
@@ -140,7 +143,7 @@ class Logs(BatchingCache):
         try:
           logger.debug("Sending request as '%s'", self._payload_cache)
           response = self.make_request(path='/log/ingest', method='POST',
-                                       body=self._payload_cache)
+                                       body=self._payload_cache, api_type="logs")
           if isinstance(response, ApplyResult):
             response = response.get()
           self._response_handler(self._payload_cache, response[0], response[1],
@@ -165,9 +168,26 @@ class Logs(BatchingCache):
       self.UnLock()
 
   def _merge_request(self, single_request):
+    # size limiting
+    payload_cache = json.dumps(self._payload_cache)
+    buf_payload_cache = io.BytesIO()
+    with gzip.GzipFile(mode='wb', fileobj=buf_payload_cache) as file:
+      file.write(payload_cache.encode("utf-8"))
+    file.close()
+    compressed_payload_cache = buf_payload_cache.getvalue()
+    serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
+    single_request_json = json.dumps(serialized_single_request)
+    buf_single_request = io.BytesIO()
+    with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
+      file.write(single_request_json.encode("utf-8"))
+    file.close()
+    compressed_single_request = buf_single_request.getvalue()
+    if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > 104858) or \
+            (self._payload_cache.__sizeof__() + single_request.__sizeof__() > 1048576):
+      pass
     resource = single_request['resource']
     logs = single_request['logs']
-    logs['_lm.resourceId'] = resource.ids   
+    logs['_lm.resourceId'] = resource.ids
     self._payload_cache.append(logs)
 
   def _single_request(self, **kwargs):
@@ -181,5 +201,14 @@ class Logs(BatchingCache):
       logs['metadata'] = kwargs['metadata']
     body = []
     body.append(logs)
+    # size limiting
+    single_request_json = json.dumps(body)
+    buf_single_request = io.BytesIO()
+    with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
+      file.write(single_request_json.encode("utf-8"))
+    file.close()
+    compressed_single_request = buf_single_request.getvalue()
+    if compressed_single_request.__sizeof__() > 104858 or body.__sizeof__() > 1048576:
+      return None
     return self.make_request(path='/log/ingest', method='POST',
-                             body=body, async_req=False)
+                             body=body, async_req=False, api_type="logs")
