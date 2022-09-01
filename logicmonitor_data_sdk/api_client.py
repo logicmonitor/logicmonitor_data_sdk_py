@@ -34,7 +34,6 @@ import logicmonitor_data_sdk.models
 from logicmonitor_data_sdk import rest
 from logicmonitor_data_sdk.configuration import Configuration
 from logicmonitor_data_sdk.version import __version__
-import io
 import gzip
 import urllib3.response
 
@@ -184,13 +183,8 @@ class ApiClient(object):
     if gzip_flag is None:
         gzip_flag = config.gzip_flag
     if gzip_flag:
-        buf = io.BytesIO()
-        with gzip.GzipFile(mode='wb', fileobj=buf) as file:
-            file.write(body.encode("utf-8"))
-        file.close()
-        compressed = buf.getvalue()
+        body = gzip.compress(body.encode("utf-8"))
         header_params.update({'Content-Encoding': 'gzip'})
-        body = compressed
 
     # perform request and return response
     response_data = self.request_limit_handler(

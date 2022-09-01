@@ -244,11 +244,7 @@ datapoint=dp, values={ time.time() : '23'})
           return None
       serialized_rest_metrics = self.api_client.sanitize_for_serialization([rest_metrics])
       single_request_json = json.dumps(serialized_rest_metrics)
-      buf_single_request = io.BytesIO()
-      with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
-          file.write(single_request_json.encode("utf-8"))
-      file.close()
-      compressed_single_request = buf_single_request.getvalue()
+      compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
       if compressed_single_request.__sizeof__() > 104858 or serialized_rest_metrics.__sizeof__() > 1048576:
           return None
       return self.make_request(path='/v2/metric/ingest', method='POST',
@@ -300,19 +296,12 @@ datapoint=dp, values={ time.time() : '23'})
   def _merge_request(self, single_request):
       # size limiting
       rest_request, _ = self.rest_metrics_conversion()
-      payload_cache = json.dumps(self.api_client.sanitize_for_serialization(rest_request))
-      buf_payload_cache = io.BytesIO()
-      with gzip.GzipFile(mode='wb', fileobj=buf_payload_cache) as file:
-          file.write(payload_cache.encode("utf-8"))
-      file.close()
-      compressed_payload_cache = buf_payload_cache.getvalue()
+      serialized_payload_cache = self.api_client.sanitize_for_serialization(rest_request)
+      payload_cache_json = json.dumps(serialized_payload_cache)
+      compressed_payload_cache = gzip.compress(payload_cache_json.encode("utf-8"))
       serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
       single_request_json = json.dumps(serialized_single_request)
-      buf_single_request = io.BytesIO()
-      with gzip.GzipFile(mode='wb', fileobj=buf_single_request) as file:
-          file.write(single_request_json.encode("utf-8"))
-      file.close()
-      compressed_single_request = buf_single_request.getvalue()
+      compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
       if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > 104858) or \
               (self._payload_cache.__sizeof__() + single_request.__sizeof__() > 1048576):
           pass
