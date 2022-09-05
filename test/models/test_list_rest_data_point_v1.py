@@ -15,5 +15,6 @@ class TestListRestDataPointV1(TestCase):
     def test_to_str(self):
         self.assertEqual(pprint.pformat(expected), listRestDataPointV1.to_str())
 
+
 if __name__ == '__main__':
     unittest.main()

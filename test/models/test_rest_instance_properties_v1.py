@@ -46,5 +46,7 @@ class TsetRestInstancePropertiesV1(TestCase):
         expected = pprint.pformat({'data_source': 'testDS', 'data_source_display_name': 'testDisplayName',
                                    'instance_name': 'testInstanceName', 'instance_properties': {}, 'resource_ids': {}})
         self.assertEqual(expected, restInstancePropertiesV1.to_str())
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -76,5 +76,7 @@ class TestRESTClientObject(TestCase):
 
     def tearDown(self) -> None:
         self.patcher.stop()
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -40,5 +40,6 @@ class TestConfiguration(TestCase):
                              'value': key, 'id': id}}
         self.assertDictEqual(expected, configuration.auth_settings())
 
+
 if __name__ == '__main__':
     unittest.main()

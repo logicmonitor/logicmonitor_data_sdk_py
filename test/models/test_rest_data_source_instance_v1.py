@@ -64,5 +64,7 @@ class TestRestDataSourceInstanceV1(TestCase):
                     'instance_name': 'testName',
                     'instance_properties': {}}
         self.assertDictEqual(expected, restDataSourceInstanceV1.to_dict())
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -14,7 +14,7 @@ import sys
 import time
 
 sys.path.append("..")
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 
 import logicmonitor_data_sdk
 from logicmonitor_data_sdk.api.metrics import Metrics
@@ -67,7 +67,7 @@ configuration.debug = True
 
 # configuration.logger_file = None
 
-class MyResponse(ResonseInterface):
+class MyResponse(ResponseInterface):
 
   def success_callback(self, request, response, status, request_id):
     logger.info("%s: %s: %s: %s", request, response, status, request_id)

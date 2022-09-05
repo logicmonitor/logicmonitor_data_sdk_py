@@ -46,10 +46,10 @@ class Logs(BatchingCache):
     >>> from logicmonitor_data_sdk.configuration import Configuration
     >>> conf = Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key='API_ACCESS_KEY')
     >>> # Create the Logs client with batching support and flush interval as 30 sec.
-    >>> logsAPi = Logs(batch=True, interval=30)
+    >>> logsAPi = Logs(batch=True, interval=10)
   """
 
-  def __init__(self, batch=True, interval=30, response_callback=None,
+  def __init__(self, batch=True, interval=10, response_callback=None,
       api_client=None):
     super(Logs, self).__init__(api_client=api_client, batch=batch,
                                interval=interval,

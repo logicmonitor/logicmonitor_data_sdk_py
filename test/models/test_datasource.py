@@ -53,5 +53,6 @@ class TestDataSource(TestCase):
     def test__valid_field(self):
         self.assertEqual('', datasource._valid_field())
 
+
 if __name__ == '__main__':
     unittest.main()

@@ -7,7 +7,7 @@ from urllib3._collections import HTTPHeaderDict
 
 import logicmonitor_data_sdk
 from logicmonitor_data_sdk.api.metrics import Metrics
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 from logicmonitor_data_sdk.models.push_metric_api_response import PushMetricAPIResponse
 
@@ -16,7 +16,7 @@ configuration = logicmonitor_data_sdk.Configuration(company='company',
                                                     key='key')
 
 
-class MyResponse(ResonseInterface):
+class MyResponse(ResponseInterface):
 
     def success_callback(self, request, response, status, request_id):
         print("%s: %s: %s", response, status, request_id)
@@ -87,6 +87,7 @@ class TestInternalCache(TestCase):
     def test_make_request(self, mock_call_api):
         result = batchingcache.make_request(path=path, method=method, body=body, create=create)
         self.assertEqual(expected, result)
+
 
 if __name__ == '__main__':
     unittest.main()

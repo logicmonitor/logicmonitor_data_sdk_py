@@ -11,7 +11,6 @@ import logicmonitor_data_sdk
 from logicmonitor_data_sdk import PushMetricAPIResponse
 from logicmonitor_data_sdk.version import __version__
 from logicmonitor_data_sdk.api_client import ApiClient
-from logicmonitor_data_sdk import rest
 
 configuration = logicmonitor_data_sdk.Configuration(company='company',
                                                     id='id',
@@ -84,6 +83,7 @@ class TestApiClient(TestCase):
             os=platform.system().lower(),
             arch=platform.machine().lower(),
         )
+        request_params = {"url": url}
 
     def test_call_api(self):
         with mock.patch.object(apiClient, '_ApiClient__call_api', return_value=expected):
@@ -112,7 +112,6 @@ class TestApiClient(TestCase):
             arch=platform.machine().lower(),
         )
         expected1 = apiClient.user_agent
-        print("result",result)
         self.assertEqual(expected1, result)
 
     def test__call_api(self):
@@ -149,38 +148,39 @@ class TestApiClient(TestCase):
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.GET', return_value=restResponse)
     def test_request_GET(self, mock__rest_GET):
-        result = apiClient.request(method="GET", url=url)
+        result = apiClient.request_limit_handler(method="GET", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.POST', return_value=restResponse)
     def test_request_POST(self, mock__rest_POST):
-        result = apiClient.request(method="POST", url=url)
+        result = apiClient.request_limit_handler(method="POST", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.PUT', return_value=restResponse)
     def test_request_PUT(self, mock__rest_PUT):
-        result = apiClient.request(method="PUT", url=url)
+        result = apiClient.request_limit_handler(method="PUT", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.PATCH', return_value=restResponse)
     def test_request_PATCH(self, mock__rest_PATCH):
-        result = apiClient.request(method="PATCH", url=url)
+        result = apiClient.request_limit_handler(method="PATCH", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.OPTIONS', return_value=restResponse)
     def test_request_OPTIONS(self, mock__rest_OPTIONS):
-        result = apiClient.request(method="OPTIONS", url=url)
+        result = apiClient.request_limit_handler(method="OPTIONS", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.DELETE', return_value=restResponse)
     def test_request_DELETE(self, mock__rest_DELETE):
-        result = apiClient.request(method="DELETE", url=url)
+        result = apiClient.request_limit_handler(method="DELETE", url=url)
         self.assertEqual(result, restResponse)
 
     @mock.patch('logicmonitor_data_sdk.rest.RESTClientObject.HEAD', return_value=restResponse)
     def test_request_HEAD(self, mock__rest_HEAD):
-        result = apiClient.request(method="HEAD", url=url)
+        result = apiClient.request_limit_handler(method="HEAD", url=url)
         self.assertEqual(result, restResponse)
+
 
 if __name__ == '__main__':
     unittest.main()

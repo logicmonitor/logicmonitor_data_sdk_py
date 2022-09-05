@@ -11,6 +11,7 @@ properties = {}
 
 resource = Resource(ids)
 
+
 class TestDataSourceInstance(TestCase):
     def setUp(self):
         resource.description = description
@@ -50,5 +51,7 @@ class TestDataSourceInstance(TestCase):
     def test_to_str(self):
         expected = pprint.pformat({'description': 'This description is in test.', 'ids': {'adasd': '1234'}, 'name': 'simpleresource', 'properties': {}, 'create': True})
         self.assertEqual(expected,resource.to_str())
+
+
 if __name__ == '__main__':
     unittest.main()

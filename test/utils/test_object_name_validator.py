@@ -9,6 +9,7 @@ one at https://mozilla.org/MPL/2.0/.
 """
 
 import re
+import unittest
 from unittest import TestCase
 
 from logicmonitor_data_sdk.utils.object_name_validator import \
@@ -347,6 +348,7 @@ class TestObjectNameValidator(TestCase):
       self.assertEqual(False,result)
       result = self.object_name_validator.is_valid_company_name("lmfirstlast")
       self.assertEqual(True,result)
+
   def test_is_valid_auth_id(self):
       result = self.object_name_validator.is_valid_auth_id("* )8123123")
       self.assertEqual(False,result)
@@ -358,3 +360,7 @@ class TestObjectNameValidator(TestCase):
       self.assertEqual(False,result)
       result = self.object_name_validator.is_valid_auth_key("keynotwithspace")
       self.assertEqual(True,result)
+
+
+if __name__ == '__main__':
+    unittest.main()

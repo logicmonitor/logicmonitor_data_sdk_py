@@ -52,5 +52,6 @@ class TestDataPoint(TestCase):
     def test_valid_field(self):
         self.assertEqual('', datapoint.valid_field())
 
+
 if __name__ == '__main__':
     unittest.main()

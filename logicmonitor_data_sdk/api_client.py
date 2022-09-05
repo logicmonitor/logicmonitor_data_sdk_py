@@ -418,7 +418,7 @@ class ApiClient(object):
       )
 
   def request_limit_handler(self, method, url, query_params=None, headers=None, post_params=None,
-                            body=None, _preload_content=True, _request_timeout=None, api_type=None,):
+                            body=None, _preload_content=True, _request_timeout=None, api_type=None):
     request_params = {"method": method, "url": url, "query_params": query_params, "headers": headers,
                       "post_params": post_params, "body": body, "_preload_content": _preload_content,
                       "_request_timeout": _request_timeout, "api_type": api_type}
