@@ -179,7 +179,11 @@ class ApiClient(object):
         files)
 
     # gzip compression
-    body = json.dumps(body)
+    try:
+      body = json.dumps(body)
+    except TypeError as e:
+      msg = "{0}\n{1}".format(type(e).__name__, str(e))
+      raise TypeError(msg)
     if gzip_flag is None:
         gzip_flag = config.gzip_flag
     if gzip_flag:
@@ -571,7 +575,11 @@ class ApiClient(object):
 
             # Concatenate Request details
             if body is not None:
-              request_vars = method + epoch + json.dumps(body) + resource_path
+              try:
+                request_vars = method + epoch + json.dumps(body) + resource_path
+              except TypeError as e:
+                msg = "{0}\n{1}".format(type(e).__name__, str(e))
+                raise TypeError(msg)
             elif files is not None:
               filedata = ''
               for k, v in six.iteritems(files):

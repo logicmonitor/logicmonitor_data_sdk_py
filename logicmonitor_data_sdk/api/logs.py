@@ -29,6 +29,8 @@ import json
 import gzip
 
 logger = logging.getLogger('lmdata.api')
+compressed_body_max_size = 104858
+body_max_size = 1048576
 
 
 class Logs(BatchingCache):
@@ -168,13 +170,17 @@ class Logs(BatchingCache):
 
   def _merge_request(self, single_request):
     # size limiting
-    payload_cache = json.dumps(self._payload_cache)
-    compressed_payload_cache = gzip.compress(payload_cache.encode("utf-8"))
     serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
-    single_request_json = json.dumps(serialized_single_request)
+    try:
+      payload_cache = json.dumps(self._payload_cache)
+      single_request_json = json.dumps(serialized_single_request)
+    except TypeError as e:
+      msg = "{0}\n{1}".format(type(e).__name__, str(e))
+      raise TypeError(msg)
+    compressed_payload_cache = gzip.compress(payload_cache.encode("utf-8"))
     compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-    if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > 104858) or \
-            (self._payload_cache.__sizeof__() + single_request.__sizeof__() > 1048576):
+    if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > compressed_body_max_size) or \
+            (self._payload_cache.__sizeof__() + single_request.__sizeof__() > body_max_size):
       pass
     resource = single_request['resource']
     logs = single_request['logs']
@@ -193,9 +199,13 @@ class Logs(BatchingCache):
     body = []
     body.append(logs)
     # size limiting
-    single_request_json = json.dumps(body)
+    try:
+      single_request_json = json.dumps(body)
+    except TypeError as e:
+      msg = "{0}\n{1}".format(type(e).__name__, str(e))
+      raise TypeError(msg)
     compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-    if compressed_single_request.__sizeof__() > 104858 or body.__sizeof__() > 1048576:
+    if compressed_single_request.__sizeof__() > compressed_body_max_size or body.__sizeof__() > body_max_size:
       return None
     return self.make_request(path='/log/ingest', method='POST',
                              body=body, async_req=False, api_type="logs")

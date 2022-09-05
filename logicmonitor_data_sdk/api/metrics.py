@@ -28,12 +28,14 @@ from logicmonitor_data_sdk.internal.internal_cache import BatchingCache
 from logicmonitor_data_sdk.rest import ApiException
 from logicmonitor_data_sdk.utils.object_name_validator import ObjectNameValidator
 import gzip
-import io
 import json
 
 objectNameValidator = ObjectNameValidator()
 
 logger = logging.getLogger('lmdata.api')
+compressed_body_max_size = 104858
+body_max_size = 1048576
+max_number_instances = 100
 
 
 class Metrics(BatchingCache):
@@ -240,12 +242,16 @@ datapoint=dp, values={ time.time() : '23'})
                                    instances=instances,
                                    singleInstanceDS=datasource.singleInstanceDS)
       # size limiting
-      if instances is not None and len(instances) > 100:
+      if instances is not None and len(instances) > max_number_instances:
           return None
       serialized_rest_metrics = self.api_client.sanitize_for_serialization([rest_metrics])
-      single_request_json = json.dumps(serialized_rest_metrics)
+      try:
+          single_request_json = json.dumps(serialized_rest_metrics)
+      except TypeError as e:
+          msg = "{0}\n{1}".format(type(e).__name__, str(e))
+          raise TypeError(msg)
       compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-      if compressed_single_request.__sizeof__() > 104858 or serialized_rest_metrics.__sizeof__() > 1048576:
+      if compressed_single_request.__sizeof__() > compressed_body_max_size or serialized_rest_metrics.__sizeof__() > body_max_size:
           return None
       return self.make_request(path='/v2/metric/ingest', method='POST',
                                body=[rest_metrics], create=host.create,
@@ -297,13 +303,17 @@ datapoint=dp, values={ time.time() : '23'})
       # size limiting
       rest_request, _ = self.rest_metrics_conversion()
       serialized_payload_cache = self.api_client.sanitize_for_serialization(rest_request)
-      payload_cache_json = json.dumps(serialized_payload_cache)
-      compressed_payload_cache = gzip.compress(payload_cache_json.encode("utf-8"))
       serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
-      single_request_json = json.dumps(serialized_single_request)
+      try:
+          payload_cache_json = json.dumps(serialized_payload_cache)
+          single_request_json = json.dumps(serialized_single_request)
+      except TypeError as e:
+          msg = "{0}\n{1}".format(type(e).__name__, str(e))
+          raise TypeError(msg)
+      compressed_payload_cache = gzip.compress(payload_cache_json.encode("utf-8"))
       compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-      if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > 104858) or \
-              (self._payload_cache.__sizeof__() + single_request.__sizeof__() > 1048576):
+      if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > compressed_body_max_size) or \
+              (self._payload_cache.__sizeof__() + single_request.__sizeof__() > body_max_size):
           pass
       resource = single_request['resource']
       datasource = single_request['datasource']
@@ -319,7 +329,7 @@ datapoint=dp, values={ time.time() : '23'})
           payload_host[datasource] = {}
           payload_ds = payload_host[datasource]
       payload_instance = payload_ds.get(instance)
-      if payload_instance is not None and len(payload_instance) > 100:
+      if payload_instance is not None and len(payload_instance) > max_number_instances:
           pass
       if payload_instance == None:
           payload_ds[instance] = {}
