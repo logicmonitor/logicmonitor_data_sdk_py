@@ -11,14 +11,14 @@ one at https://mozilla.org/MPL/2.0/.
 # coding: utf-8
 
 
-class ResonseInterface(object):
+class ResponseInterface(object):
   """
   This is the callback interface for handling the response.
   End user can create his own class using this one to get the response status.
   """
 
   def __init__(self):
-    super(ResonseInterface, self).__init__()
+    super(ResponseInterface, self).__init__()
 
   @classmethod
   def success_callback(self, request, response, status, request_id):

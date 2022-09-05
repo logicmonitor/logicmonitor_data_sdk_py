@@ -25,7 +25,7 @@ import logicmonitor_data_sdk
 #                     |...
 #
 from logicmonitor_data_sdk.api.metrics import Metrics
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 from logicmonitor_data_sdk.api_client import ApiClient
 from logicmonitor_data_sdk.models import DataSource, \
   Resource, DataSourceInstance, DataPoint
@@ -37,7 +37,7 @@ from example import system_properties
 configuration = logicmonitor_data_sdk.Configuration(company='your_company',
                                                     id='API_ACCESS_ID',
                                                     key='API_ACCESS_KEY')
-class MyResponse(ResonseInterface):
+class MyResponse(ResponseInterface):
     """
     Sample callback to handle the response from the REST endpoints
     """

@@ -30,7 +30,7 @@ import time
 import six
 
 from logicmonitor_data_sdk import ApiClient
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 
 logger = logging.getLogger('lmdata.api')
 _DEFAULT_QUEUE = 100
@@ -74,7 +74,7 @@ class BatchingCache(object):
     self._request_cb = request_cb
     self._merge_cb = merge_cb
     if not response_callback and not isinstance(response_callback,
-                                                ResonseInterface):
+                                                ResponseInterface):
       logger.warn("Response callback is not defined or valid.")
       self._response_callback = None
     else:

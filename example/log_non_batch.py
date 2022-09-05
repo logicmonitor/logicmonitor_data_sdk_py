@@ -15,11 +15,11 @@ import logicmonitor_data_sdk
 
 from logicmonitor_data_sdk.api.logs import Logs
 from logicmonitor_data_sdk.models import Resource
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 from example import system_properties
 
 
-class MyResponse(ResonseInterface):
+class MyResponse(ResponseInterface):
     """
     Sample callback to handle the response from the REST endpoints
     """
