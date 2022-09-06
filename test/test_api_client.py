@@ -83,7 +83,6 @@ class TestApiClient(TestCase):
             os=platform.system().lower(),
             arch=platform.machine().lower(),
         )
-        request_params = {"url": url}
 
     def test_call_api(self):
         with mock.patch.object(apiClient, '_ApiClient__call_api', return_value=expected):

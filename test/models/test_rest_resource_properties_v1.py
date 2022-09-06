@@ -29,11 +29,11 @@ class TestRestResourcePropertiesV1(TestCase):
 
     def test_to_dict(self):
         expected = {'resource_ids': {}, 'resource_name': 'testResourceName', 'resource_properties': {}}
-        self.assertDictEqual(expected,restResourcePropertiesV1.to_dict())
+        self.assertDictEqual(expected, restResourcePropertiesV1.to_dict())
 
     def test_to_str(self):
-      expected = pprint.pformat({'resource_ids': {}, 'resource_name': 'testResourceName', 'resource_properties': {}})
-      self.assertEqual(expected,restResourcePropertiesV1.to_str())
+        expected = pprint.pformat({'resource_ids': {}, 'resource_name': 'testResourceName', 'resource_properties': {}})
+        self.assertEqual(expected, restResourcePropertiesV1.to_str())
 
 
 if __name__ == '__main__':

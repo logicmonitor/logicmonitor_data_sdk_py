@@ -8,7 +8,7 @@ description = 'This is description test.'
 display_name = 'testDisplayName'
 name = 'testName'
 properties = MapStringString()
-instanceId = 7
+instance_id = 7
 
 datasourceInstance = DataSourceInstance("name")
 
@@ -19,39 +19,39 @@ class TestDatasourceInstance(TestCase):
         datasourceInstance.display_name = display_name
         datasourceInstance.name = name
         datasourceInstance.properties = properties
-        datasourceInstance.instanceId = instanceId
+        datasourceInstance.instance_id = instance_id
 
     def test_description(self):
         result = datasourceInstance.description
-        self.assertEqual(description,result)
+        self.assertEqual(description, result)
 
     def test_display_name(self):
         result = datasourceInstance.display_name
-        self.assertEqual(display_name,result)
+        self.assertEqual(display_name, result)
 
     def test_name(self):
         result = datasourceInstance.name
-        self.assertEqual(name,result)
+        self.assertEqual(name, result)
 
     def test_properties(self):
         result = datasourceInstance.properties
-        self.assertEqual(properties,result)
+        self.assertEqual(properties, result)
 
     def test_instanceId(self):
-        result = datasourceInstance.instanceId
-        self.assertEqual(instanceId,result)
+        result = datasourceInstance.instance_id
+        self.assertEqual(instance_id, result)
 
     def test_to_str(self):
         expected = pprint.pformat({'description': 'This is description test.',
                                    'display_name': 'testDisplayName',
-                                   'instanceId': 7,
+                                   'instance_id': 7,
                                    'name': 'testName',
                                    'properties': {}})
-        self.assertEqual(expected,datasourceInstance.to_str())
+        self.assertEqual(expected, datasourceInstance.to_str())
 
     def test_to_dict(self):
-        expected = {'description': 'This is description test.', 'display_name': 'testDisplayName', 'name': 'testName', 'properties': {}, 'instanceId': 7}
-        self.assertDictEqual(expected,datasourceInstance.to_dict())
+        expected = {'description': 'This is description test.', 'display_name': 'testDisplayName', 'name': 'testName', 'properties': {}, 'instance_id': 7}
+        self.assertDictEqual(expected, datasourceInstance.to_dict())
 
 
 if __name__ == '__main__':

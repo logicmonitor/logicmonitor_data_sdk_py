@@ -31,7 +31,7 @@ batchingcache = BatchingCache(api_client=None, batch=True,
                               request_cb=Metrics._do_request,
                               merge_cb=Metrics._merge_request)
 
-pushMetricAPIResponse=PushMetricAPIResponse()
+pushMetricAPIResponse = PushMetricAPIResponse()
 pushMetricAPIResponse.timestamp = int(datetime.datetime.now().timestamp())
 pushMetricAPIResponse.resource_ids = None
 pushMetricAPIResponse.message = 'The request has been accepted for processing, but the processing has not been completed.'

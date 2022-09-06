@@ -8,7 +8,7 @@ one at https://mozilla.org/MPL/2.0/.
 =======
 """
 
-  # coding: utf-8
+# coding: utf-8
 
 # Logs API client: It formats and submit REST API calls to LogicMonitor.
 
@@ -34,7 +34,7 @@ body_max_size = 1048576
 
 
 class Logs(BatchingCache):
-  """
+    """
   This API client is for ingesting the logs in LogicMonitor.
 
   Args:
@@ -51,17 +51,17 @@ class Logs(BatchingCache):
     >>> logsAPi = Logs(batch=True, interval=10)
   """
 
-  def __init__(self, batch=True, interval=10, response_callback=None,
-      api_client=None):
-    super(Logs, self).__init__(api_client=api_client, batch=batch,
-                               interval=interval,
-                               response_callback=response_callback,
-                               request_cb=self._do_request,
-                               merge_cb=self._merge_request)
-    self._payload_cache = []
+    def __init__(self, batch=True, interval=10, response_callback=None,
+                 api_client=None):
+        super(Logs, self).__init__(api_client=api_client, batch=batch,
+                                   interval=interval,
+                                   response_callback=response_callback,
+                                   request_cb=self._do_request,
+                                   merge_cb=self._merge_request)
+        self._payload_cache = []
 
-  def send_logs(self, **kwargs):  # noqa: E501
-    """
+    def send_logs(self, **kwargs):  # noqa: E501
+        """
     This send_logs method is used to sending the logs to rest endpoint.
 
     Args:
@@ -88,7 +88,7 @@ class Logs(BatchingCache):
       >>> log_api.send_logs(resource=resource, msg = "this is a sample log")
     """
 
-    """LogIngestApi  # noqa: E501
+        """LogIngestApi  # noqa: E501
 
     LogIngestApi is used for the purpose of ingesting raw metrics to the LM application. It needs metrics in the format of RestMetricsV1 object. Payload is then validated with series of validation, successfully verified metrics will be ingested to Kafka. Only POST method is applied to this API  # noqa: E501
     This method makes a synchronous HTTP request by default. To make an
@@ -104,108 +104,108 @@ class Logs(BatchingCache):
              returns the request thread.
     """
 
-    all_params = ['resource', 'msg','timestamp', 'metadata']  # noqa: E501
-    params = locals()
-    for key, val in six.iteritems(params['kwargs']):
-      if key not in all_params:
-        raise TypeError(
-            "Got an unexpected keyword argument '%s' to method send_logs()" % key
-        )
-      params[key] = val
-    del params['kwargs']
-    del params['self']
-    del params['all_params']
-    for one in all_params:
-      if (one!='timestamp' and one!='metadata') and (not params.__contains__(one)):
-        raise TypeError(
-            "Some arguments are missing keys='%s'" %
-            one
-        )
-    # logger.debug("Request Send for {}".format(str(params['resource'].ids)))
-    if self.batch:
-      # self.add_request(**kwargs)
-      logs = {}
-      logs['msg'] = kwargs['msg']
-      if kwargs.__contains__('timestamp'):
-        logs['timestamp'] = kwargs['timestamp']
-      if kwargs.__contains__('metadata'):
-        logs['metadata'] = kwargs['metadata']
-      self.add_request(resource=copy.deepcopy(kwargs['resource']),
-                       logs=logs)
-    else:
-      return self._single_request(**kwargs)
+        all_params = ['resource', 'msg', 'timestamp', 'metadata']  # noqa: E501
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s' to method send_logs()" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        del params['self']
+        del params['all_params']
+        for one in all_params:
+            if (one != 'timestamp' and one != 'metadata') and (not params.__contains__(one)):
+                raise TypeError(
+                    "Some arguments are missing keys='%s'" %
+                    one
+                )
+        # logger.debug("Request Send for {}".format(str(params['resource'].ids)))
+        if self.batch:
+            # self.add_request(**kwargs)
+            logs = {}
+            logs['msg'] = kwargs['msg']
+            if kwargs.__contains__('timestamp'):
+                logs['timestamp'] = kwargs['timestamp']
+            if kwargs.__contains__('metadata'):
+                logs['metadata'] = kwargs['metadata']
+            self.add_request(resource=copy.deepcopy(kwargs['resource']),
+                             logs=logs)
+        else:
+            return self._single_request(**kwargs)
 
-  def _do_request(self):
-    try:
-      self.Lock()
-      if len(self._payload_cache) > 0:
-        self._counter.update({BatchingCache._PAYLOAD_TOTAL:
-                                len(self._payload_cache)})
+    def _do_request(self):
         try:
-          logger.debug("Sending request as '%s'", self._payload_cache)
-          response = self.make_request(path='/log/ingest', method='POST',
-                                       body=self._payload_cache, api_type="logs")
-          if isinstance(response, ApplyResult):
-            response = response.get()
-          self._response_handler(self._payload_cache, response[0], response[1],
-                                 response[2])
-        except ApiException as ex:
-          # logger.exception("Got Exception " + str(ex), exc_info=ex)
-          logger.exception("Got exception Status:%s body=%s reason:%s",
-                           ex.status,
-                           ex.body, ex.reason)
-          self._response_handler(self._payload_cache, ex.body, ex.status,
-                                 ex.headers,
-                                 ex.reason)
-          self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
+            self.Lock()
+            if len(self._payload_cache) > 0:
+                self._counter.update({BatchingCache._PAYLOAD_TOTAL: len(self._payload_cache)})
+                try:
+                    logger.debug("Sending request as '%s'", self._payload_cache)
+                    response = self.make_request(path='/log/ingest', method='POST',
+                                                 body=self._payload_cache, api_type="logs")
+                    if isinstance(response, ApplyResult):
+                        response = response.get()
+                    self._response_handler(self._payload_cache, response[0], response[1],
+                                           response[2])
+                except ApiException as ex:
+                    # logger.exception("Got Exception " + str(ex), exc_info=ex)
+                    logger.exception("Got exception Status:%s body=%s reason:%s",
+                                     ex.status,
+                                     ex.body, ex.reason)
+                    self._response_handler(self._payload_cache, ex.body, ex.status,
+                                           ex.headers,
+                                           ex.reason)
+                    self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
 
-        self._payload_cache = []
-        self._counter.update(BatchingCache._PAYLOAD_SEND)
-      self._counter.update(BatchingCache._PAYLOAD_BUILD)
-    except Exception as ex:
-      logger.exception("Got Exception " + str(ex), exc_info=ex)
-      self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
-    finally:
-      self.UnLock()
+                self._payload_cache = []
+                self._counter.update(BatchingCache._PAYLOAD_SEND)
+            self._counter.update(BatchingCache._PAYLOAD_BUILD)
+        except Exception as ex:
+            logger.exception("Got Exception " + str(ex), exc_info=ex)
+            self._counter.update(BatchingCache._PAYLOAD_EXCEPTION)
+        finally:
+            self.UnLock()
 
-  def _merge_request(self, single_request):
-    # size limiting
-    serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
-    try:
-      payload_cache = json.dumps(self._payload_cache)
-      single_request_json = json.dumps(serialized_single_request)
-    except TypeError as e:
-      msg = "{0}\n{1}".format(type(e).__name__, str(e))
-      raise TypeError(msg)
-    compressed_payload_cache = gzip.compress(payload_cache.encode("utf-8"))
-    compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-    if (compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > compressed_body_max_size) or \
-            (self._payload_cache.__sizeof__() + single_request.__sizeof__() > body_max_size):
-      pass
-    resource = single_request['resource']
-    logs = single_request['logs']
-    logs['_lm.resourceId'] = resource.ids
-    self._payload_cache.append(logs)
+    def _merge_request(self, single_request):
+        # size limiting
+        serialized_single_request = self.api_client.sanitize_for_serialization(single_request)
+        try:
+            payload_cache = json.dumps(self._payload_cache)
+            single_request_json = json.dumps(serialized_single_request)
+        except TypeError as e:
+            msg = "{0}\n{1}".format(type(e).__name__, str(e))
+            raise TypeError(msg)
+        compressed_payload_cache = gzip.compress(payload_cache.encode("utf-8"))
+        compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
+        if (
+                compressed_payload_cache.__sizeof__() + compressed_single_request.__sizeof__() > compressed_body_max_size) or \
+                (self._payload_cache.__sizeof__() + single_request.__sizeof__() > body_max_size):
+            pass
+        resource = single_request['resource']
+        logs = single_request['logs']
+        logs['_lm.resourceId'] = resource.ids
+        self._payload_cache.append(logs)
 
-  def _single_request(self, **kwargs):
-    resource = kwargs['resource']
-    logs = {}
-    logs['msg']= kwargs['msg']
-    logs['_lm.resourceId'] = resource.ids
-    if kwargs.__contains__('timestamp'):
-      logs['timestamp'] = kwargs['timestamp']
-    if kwargs.__contains__('metadata'):
-      logs['metadata'] = kwargs['metadata']
-    body = []
-    body.append(logs)
-    # size limiting
-    try:
-      single_request_json = json.dumps(body)
-    except TypeError as e:
-      msg = "{0}\n{1}".format(type(e).__name__, str(e))
-      raise TypeError(msg)
-    compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
-    if compressed_single_request.__sizeof__() > compressed_body_max_size or body.__sizeof__() > body_max_size:
-      return None
-    return self.make_request(path='/log/ingest', method='POST',
-                             body=body, async_req=False, api_type="logs")
+    def _single_request(self, **kwargs):
+        resource = kwargs['resource']
+        logs = {}
+        logs['msg'] = kwargs['msg']
+        logs['_lm.resourceId'] = resource.ids
+        if kwargs.__contains__('timestamp'):
+            logs['timestamp'] = kwargs['timestamp']
+        if kwargs.__contains__('metadata'):
+            logs['metadata'] = kwargs['metadata']
+        body = []
+        body.append(logs)
+        # size limiting
+        try:
+            single_request_json = json.dumps(body)
+        except TypeError as e:
+            msg = "{0}\n{1}".format(type(e).__name__, str(e))
+            raise TypeError(msg)
+        compressed_single_request = gzip.compress(single_request_json.encode("utf-8"))
+        if compressed_single_request.__sizeof__() > compressed_body_max_size or body.__sizeof__() > body_max_size:
+            return None
+        return self.make_request(path='/log/ingest', method='POST',
+                                 body=body, async_req=False, api_type="logs")

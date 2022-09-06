@@ -41,13 +41,13 @@ class TestDataPoint(TestCase):
 
     def test_to_str(self):
         expected = pprint.pformat(
-            {'aggregation_type': 'percentile', 'description': 'This is description test.', 'name': 'name','percentile': 1,
+            {'aggregation_type': 'percentile', 'description': 'This is description test.', 'name': 'name', 'percentile': 1,
              'type': 'counter'})
         self.assertEqual(expected, datapoint.to_str())
 
     def test_to_dict(self):
         expected = {'aggregation_type': 'percentile', 'description': 'This is description test.', 'name': 'name', 'type': 'counter', 'percentile': 1}
-        self.assertDictEqual(expected,datapoint.to_dict())
+        self.assertDictEqual(expected, datapoint.to_dict())
 
     def test_valid_field(self):
         self.assertEqual('', datapoint.valid_field())

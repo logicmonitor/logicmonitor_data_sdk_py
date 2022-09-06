@@ -9,10 +9,7 @@ one at https://mozilla.org/MPL/2.0/.
 """
 
 from __future__ import print_function
-
 import sys
-
-sys.path.append("..")
 
 import time
 import random
@@ -24,11 +21,12 @@ from logicmonitor_data_sdk.models.datasource import DataSource
 from logicmonitor_data_sdk.models.datasource_instance import DataSourceInstance
 from logicmonitor_data_sdk.models.resource import Resource
 
+sys.path.append("..")
 # Configure API key authorization: LMv1
 configuration = logicmonitor_data_sdk.Configuration(company='COMPANY',
                                                     authentication={
-                                                      'id': 'ID',
-                                                      'key': 'KEY'})
+                                                        'id': 'ID',
+                                                        'key': 'KEY'})
 configuration.debug = True
 # create an instance of the API class
 metric_api = Metrics(interval=20, batch=True)
@@ -39,10 +37,10 @@ instance = DataSourceInstance(name="instance")
 dp = DataPoint(name="dataPoint")
 
 while True:
-  values = {str(int(time.time())): random.randint(10, 100)}
-  metric_api.send_metrics(resource=resource,
-                          datasource=ds,
-                          instance=instance,
-                          datapoint=dp,
-                          values=values)
-  time.sleep(10)
+    values = {str(int(time.time())): random.randint(10, 100)}
+    metric_api.send_metrics(resource=resource,
+                            datasource=ds,
+                            instance=instance,
+                            datapoint=dp,
+                            values=values)
+    time.sleep(10)

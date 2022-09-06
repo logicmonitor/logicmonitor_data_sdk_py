@@ -9,12 +9,12 @@ listRestDataSourceInstanceV1 = ListRestDataSourceInstanceV1()
 
 
 class TestListRestDataSourceInstanceV1(TestCase):
-  def test_to_dict(self):
-    self.assertDictEqual(expected,listRestDataSourceInstanceV1.to_dict())
+    def test_to_dict(self):
+        self.assertDictEqual(expected, listRestDataSourceInstanceV1.to_dict())
 
-  def test_to_str(self):
-    self.assertEqual(pprint.pformat(expected),listRestDataSourceInstanceV1.to_str())
+    def test_to_str(self):
+        self.assertEqual(pprint.pformat(expected), listRestDataSourceInstanceV1.to_str())
 
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()

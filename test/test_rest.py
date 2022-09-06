@@ -12,11 +12,11 @@ httpHeaderDict = HTTPHeaderDict(
     {'date': time.strftime("%a, %d %b %Y %I:%M:%S " + 'GMT', time.gmtime()), 'content-type': 'application/json',
      'content-length': '148', 'x-request-id': '63d50f8efd0448da89155899e31e7ab0', 'server': 'LM',
      'strict-transport-security': 'max-age=31536000;'})
-restResponce = urllib3.response.HTTPResponse(headers=httpHeaderDict, version=11,
-                                             status=200, strict=0,
-                                             body=b'{"code":202,"errors":[],"message":"The request has been accepted '
-                                                  b'for processing, but the processing has not been completed.", ')
-rESTResponse = RESTResponse(restResponce)
+rest_responce = urllib3.response.HTTPResponse(headers=httpHeaderDict, version=11,
+                                              status=200, strict=0,
+                                              body=b'{"code":202,"errors":[],"message":"The request has been accepted '
+                                                   b'for processing, but the processing has not been completed.", ')
+rESTResponse = RESTResponse(rest_responce)
 
 company = 'company'
 url = 'https://' + company + '.logicmonitor.com/rest/v2/metric/ingest'
@@ -43,7 +43,7 @@ class TestRESTClientObject(TestCase):
         self.patcher.start()
 
     def test_request(self):
-        result = rESTClientObject.request(method='POST',url=url)
+        result = rESTClientObject.request(method='POST', url=url)
         self.assertEqual(rESTResponse, result)
 
     def test_GET(self):
