@@ -8,49 +8,51 @@ description = 'This is description test.'
 display_name = 'testDisplayName'
 name = 'testName'
 properties = MapStringString()
-instanceId = 7
+instance_id = 7
 
-datasourceinstance = DataSourceInstance()
+datasourceInstance = DataSourceInstance("name")
 
-class TestDataSourceInstance(TestCase):
+
+class TestDatasourceInstance(TestCase):
     def setUp(self) -> None:
-        datasourceinstance.description = description
-        datasourceinstance.display_name = display_name
-        datasourceinstance.name = name
-        datasourceinstance.properties = properties
-        datasourceinstance.instanceId = instanceId
+        datasourceInstance.description = description
+        datasourceInstance.display_name = display_name
+        datasourceInstance.name = name
+        datasourceInstance.properties = properties
+        datasourceInstance.instance_id = instance_id
 
     def test_description(self):
-        result = datasourceinstance.description
-        self.assertEqual(description,result)
+        result = datasourceInstance.description
+        self.assertEqual(description, result)
 
     def test_display_name(self):
-        result = datasourceinstance.display_name
-        self.assertEqual(display_name,result)
+        result = datasourceInstance.display_name
+        self.assertEqual(display_name, result)
 
     def test_name(self):
-        result = datasourceinstance.name
-        self.assertEqual(name,result)
+        result = datasourceInstance.name
+        self.assertEqual(name, result)
 
     def test_properties(self):
-        result = datasourceinstance.properties
-        self.assertEqual(properties,result)
+        result = datasourceInstance.properties
+        self.assertEqual(properties, result)
 
     def test_instanceId(self):
-        result = datasourceinstance.instanceId
-        self.assertEqual(instanceId,result)
+        result = datasourceInstance.instance_id
+        self.assertEqual(instance_id, result)
 
     def test_to_str(self):
         expected = pprint.pformat({'description': 'This is description test.',
                                    'display_name': 'testDisplayName',
-                                   'instanceId': 7,
+                                   'instance_id': 7,
                                    'name': 'testName',
                                    'properties': {}})
-        self.assertEqual(expected,datasourceinstance.to_str())
+        self.assertEqual(expected, datasourceInstance.to_str())
 
     def test_to_dict(self):
-        expected = {'description': 'This is description test.', 'display_name': 'testDisplayName', 'name': 'testName', 'properties': {}, 'instanceId': 7}
-        self.assertDictEqual(expected,datasourceinstance.to_dict())
+        expected = {'description': 'This is description test.', 'display_name': 'testDisplayName', 'name': 'testName', 'properties': {}, 'instance_id': 7}
+        self.assertDictEqual(expected, datasourceInstance.to_dict())
+
 
 if __name__ == '__main__':
     unittest.main()

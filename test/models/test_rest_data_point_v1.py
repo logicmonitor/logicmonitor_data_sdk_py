@@ -15,7 +15,6 @@ restDataPointV1 = RestDataPointV1()
 
 
 class TestRestDataPointV1(TestCase):
-
     def setUp(self) -> None:
         restDataPointV1.data_point_description = data_point_description
         restDataPointV1.data_point_type = data_point_type
@@ -40,14 +39,15 @@ class TestRestDataPointV1(TestCase):
 
     def test_to_dict(self):
         expected = {'data_point_aggregation_type': 'percentile', 'data_point_description': 'This is description test.',
-                    'data_point_name': 'name', 'data_point_type': 'counter', 'values': {}}
+                    'data_point_name': 'name', 'data_point_type': 'counter', 'percentile': None, 'values': {}}
         self.assertDictEqual(expected, restDataPointV1.to_dict())
 
     def test_to_str(self):
         expected = pprint.pformat(
             {'data_point_aggregation_type': 'percentile', 'data_point_description': 'This is description test.',
-             'data_point_name': 'name', 'data_point_type': 'counter', 'values': {}})
+             'data_point_name': 'name', 'data_point_type': 'counter', 'percentile': None, 'values': {}})
         self.assertEqual(expected, restDataPointV1.to_str())
+
 
 if __name__ == '__main__':
     unittest.main()

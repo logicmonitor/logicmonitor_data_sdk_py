@@ -8,7 +8,7 @@ from urllib3._collections import HTTPHeaderDict
 import logicmonitor_data_sdk
 from logicmonitor_data_sdk import PushMetricAPIResponse
 from logicmonitor_data_sdk.api.metrics import Metrics
-from logicmonitor_data_sdk.api.response_interface import ResonseInterface
+from logicmonitor_data_sdk.api.response_interface import ResponseInterface
 from logicmonitor_data_sdk.models import Resource, DataSource, DataSourceInstance, DataPoint
 
 configuration = logicmonitor_data_sdk.Configuration(company='company',
@@ -16,7 +16,7 @@ configuration = logicmonitor_data_sdk.Configuration(company='company',
                                                     key='key')
 
 
-class MyResponse(ResonseInterface):
+class MyResponse(ResponseInterface):
     def success_callback(self, request, response, status, request_id):
         pass
 
@@ -44,7 +44,7 @@ resource = Resource(ids={"system.hostname": "SampleDevice"},  # Core Properties 
 datasource = DataSource(name="SampleDS")
 datasource_instance = DataSourceInstance(name="SampleInstance")
 datapoint = DataPoint(name="SampleDataPoint",
-                      aggregation_type="percentile")
+                      aggregation_type="percentile", percentile=17)
 values = {str(int(time.time())): "10"}
 
 
@@ -74,12 +74,12 @@ class TestMetrics(TestCase):
     def test_update_instance_property(self, mock_make_request):
         actual = test_metric_api2.update_instance_property(resource_ids={'system.hostname': 'SampleDevice'},
                                                            datasource='SampleDS1',
-                                                           instancename='SampleInstance1',
+                                                           instance_name='SampleInstance1',
                                                            instance_properties={'ins.property': 'values'}, )
         self.assertEqual(expected, actual)
 
     def test__valid_field(self):
-        instanceObj = DataSourceInstance(instanceId=7, name='SampleInstance', display_name='SampleInstance',
+        instanceObj = DataSourceInstance(instance_id=7, name='SampleInstance', display_name='SampleInstance',
                                          properties={'x': 'true'})
         self.assertEqual('', t._valid_field(instance=instanceObj))
 

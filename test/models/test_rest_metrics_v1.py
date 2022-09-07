@@ -78,5 +78,6 @@ class TestRestMetricsV1(TestCase):
                                    'singleInstanceDS': False})
         self.assertEqual(expected, restMetricsV1.to_str())
 
+
 if __name__ == '__main__':
     unittest.main()

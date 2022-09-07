@@ -4,9 +4,9 @@ from unittest import TestCase
 from logicmonitor_data_sdk.models.datasource import DataSource
 
 name = 'name'
-display_name = 'testdisplay'
+display_name = 'test display'
 singleInstanceDS = True
-group = 'testgroup'
+group = 'test-group'
 id = 7
 
 datasource = DataSource('name')
@@ -39,19 +39,20 @@ class TestDataSource(TestCase):
         self.assertEqual(singleInstanceDS, result)
 
     def test_to_str(self):
-        expected = pprint.pformat({'display_name': 'testdisplay',
-                                   'group': 'testgroup',
+        expected = pprint.pformat({'display_name': 'test display',
+                                   'group': 'test-group',
                                    'id': 7,
                                    'name': 'name',
                                    'singleInstanceDS': True})
         self.assertEqual(expected, datasource.to_str())
 
     def test_to_dict(self):
-        expected = {'name': 'name', 'display_name': 'testdisplay', 'group': 'testgroup', 'id': 7, 'singleInstanceDS': True}
-        self.assertDictEqual(expected,datasource.to_dict())
+        expected = {'name': 'name', 'display_name': 'test display', 'group': 'test-group', 'id': 7, 'singleInstanceDS': True}
+        self.assertDictEqual(expected, datasource.to_dict())
 
     def test__valid_field(self):
         self.assertEqual('', datasource._valid_field())
+
 
 if __name__ == '__main__':
     unittest.main()
