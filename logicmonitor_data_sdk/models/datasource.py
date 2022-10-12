@@ -152,8 +152,8 @@ class DataSource(object):
 
     @id.setter
     def id(self, id):
-        if id is not None and id < 0:
-            raise ValueError("DataSource Id {%s} should not be negative." % id)
+        if id is not None and (type(id) is not int or id < 0):
+            raise ValueError("DataSource Id {%s} should not be negative, empty or of type string." % id)
         self._id = id
 
     @property
