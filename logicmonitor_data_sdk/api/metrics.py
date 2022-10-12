@@ -105,6 +105,10 @@ datapoint=dp, values={ time.time() : '23'})
                 raise TypeError(
                     "Got an unexpected keyword argument '%s' to method SendMetrics" % key
                 )
+            if val is None:
+                raise ValueError(
+                    "Key '%s' should NOT be None" % key
+                )
             params[key] = val
         del params['kwargs']
         del params['self']
