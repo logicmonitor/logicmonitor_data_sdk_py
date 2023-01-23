@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-certifi = ">=14.05.14"
-six = ">=1.10"
-python-dateutil = ">=2.5.3"
-urllib3 = ">=1.15.1"
+certifi = "==2022.12.07"
+python-dateutil = "2.8.2"
+six = "1.16.0"
+urllib3 = "1.26.14"
 
 [dev-packages]
 
