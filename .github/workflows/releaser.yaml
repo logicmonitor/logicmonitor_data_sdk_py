@@ -22,5 +22,5 @@ jobs:
           # Artifact name
           name: sbom_report
           # A file, directory or wildcard pattern that describes what to upload
-          path: sbom.json
+          path: logicmonitor_data_sdk_py/sbom.json
 
