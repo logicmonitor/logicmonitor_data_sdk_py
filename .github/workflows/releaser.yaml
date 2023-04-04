@@ -15,9 +15,6 @@ jobs:
           echo "New release created: ${{ github.event.release.tag_name }}"
           # Run your desired script or command here
           pip install cyclonedx-bom
-          pwd
-          ls
-          cyclonedx-py -r -i ../logicmonitor_data_sdk_py/requirements.txt
-          cd ..
+          cyclonedx-py -r -i ../logicmonitor_data_sdk_py/requirements.txt --format json -o sbom.jsom
           ls
 
