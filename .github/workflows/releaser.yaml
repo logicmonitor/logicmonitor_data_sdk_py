@@ -1,1 +1,18 @@
+name: On Release
 
+on:
+  release:
+    types: [created]
+
+jobs:
+  run_on_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run script on release
+        run: |
+          echo "New release created: ${{ github.event.release.tag_name }}"
+          # Run your desired script or command here
+          pip install cyclonedx-bom
+          cyclonedx-py --help
