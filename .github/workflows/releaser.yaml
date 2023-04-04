@@ -16,4 +16,4 @@ jobs:
           # Run your desired script or command here
           pip install cyclonedx-bom
           pwd
-          cyclonedx-py -r -i logicmonitor_data_sdk_py/requirements.txt
+          cyclonedx-py -r -i ./logicmonitor_data_sdk_py/requirements.txt
