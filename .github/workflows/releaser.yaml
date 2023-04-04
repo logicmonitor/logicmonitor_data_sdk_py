@@ -16,5 +16,11 @@ jobs:
           # Run your desired script or command here
           pip install cyclonedx-bom
           cyclonedx-py -r -i ../logicmonitor_data_sdk_py/requirements.txt --format json -o sbom.jsom
-          ls
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          # Artifact name
+          name: sbom_report
+          # A file, directory or wildcard pattern that describes what to upload
+          path: sbom.json
 
