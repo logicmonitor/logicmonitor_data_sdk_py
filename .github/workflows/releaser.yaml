@@ -23,6 +23,6 @@ jobs:
           # Artifact name
           name: sbom_report
           # A file, directory or wildcard pattern that describes what to upload
-          path: sbom.jsom
+          path: sbom.json
           
 
