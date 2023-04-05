@@ -42,7 +42,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: sbom.json
-          asset_name: mything
+          asset_name: sbom
           tag: ${{ github.ref }}
           overwrite: true
           body: "SBOM for release"
