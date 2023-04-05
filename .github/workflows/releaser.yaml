@@ -17,15 +17,15 @@ jobs:
           # Run your desired script or command here
           pip install cyclonedx-bom
           cyclonedx-py -r -i ../logicmonitor_data_sdk_py/requirements.txt --format json -o sbom.json
-          ls
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          # Artifact name
-          name: sbom_report
-          # A file, directory or wildcard pattern that describes what to upload
-          path: sbom.json
-#       - name: release
+#          ls
+#       - name: Upload a Build Artifact
+#         uses: actions/upload-artifact@v3.1.2
+#         with:
+#           # Artifact name
+#           name: sbom_report
+#           # A file, directory or wildcard pattern that describes what to upload
+#           path: sbom.json
+# #       - name: release
 #         uses: actions/create-release@v1
 #         id: create_release
 #         with:
@@ -42,7 +42,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: sbom.json
-          asset_name: sbom
+          asset_name: sbom.json
           tag: ${{ github.ref }}
           overwrite: true
           body: "SBOM for release"
