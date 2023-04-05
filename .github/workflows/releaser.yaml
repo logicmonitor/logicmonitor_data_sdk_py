@@ -33,7 +33,7 @@ jobs:
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
           tag_name: ${{ github.ref }}
-          body_path: sbom.json
+          #body_path: sbom.json
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
