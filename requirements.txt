@@ -1,6 +1,6 @@
-certifi>=2022.12.07
+certifi>=2023.7.22
 python-dateutil>=2.8.2
 six>=1.16.0
-urllib3>=1.26.14
-setuptools >= 21.0.0
-psutil~=5.9.0
+urllib3>=2.0.4
+setuptools >= 68.2.2
+psutil~=5.9.5
