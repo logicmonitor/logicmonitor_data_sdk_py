@@ -6,8 +6,8 @@ from logicmonitor_data_sdk.configuration import Configuration
 company = 'company'
 id = 'id'
 key = 'key'
-
-configuration = Configuration(company=company, id=id, key=key)
+domain_name="logicmonitor.com"
+configuration = Configuration(company=company, id=id, key=key,domain_name=domain_name)
 
 
 class TestConfiguration(TestCase):
@@ -34,6 +34,9 @@ class TestConfiguration(TestCase):
 
     def test_host(self):
         self.assertEqual('https://'+company+'.logicmonitor.com/rest', configuration.host)
+    
+    def test_domain_name(self):
+        self.assertEqual('logicmonitor.com', configuration.domain_name)
 
     def test_auth_settings(self):
         expected = {'LMv1': {'type': 'api_key', 'in': 'header', 'key': 'Authorization',

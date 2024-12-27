@@ -62,12 +62,13 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
     >>> conf = logicmonitor_data_sdk.Configuration(company="ACCOUNT_NAME", id='API_ACCESS_ID', key= 'API_ACCESS_KEY')
     """
 
-    def __init__(self, company=None, authentication=None, id=None, key=None, gzip_flag=True, bearer_token=None):
+    def __init__(self, company=None, authentication=None, id=None, key=None, gzip_flag=True, bearer_token=None,domain_name=None):
         """Constructor"""
         # Default Base url
         self._authentication = {}
         self.bearer_flag = False
         self.gzip_flag = gzip_flag
+        self._domain_name= "logicmonitor.com"
         company = company or os.environ.get('LM_COMPANY')
         if company is None or company == '':
             raise ValueError(
@@ -110,7 +111,9 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
                 'Authentication must provide AccessID and AccessKey or Bearer Token'
             )
         self._company = company
-        self._host = "https://" + self._company + ".logicmonitor.com/rest"
+        if not domain_name:
+            domain_name = os.environ.get("LM_DOMAIN_NAME") or self._domain_name
+        self._host = "https://" + self._company + "." + domain_name + "/rest"
         if not self.bearer_flag:
             self.check_authentication(authentication)
         elif self.bearer_flag:
