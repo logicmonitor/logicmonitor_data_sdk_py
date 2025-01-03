@@ -104,7 +104,7 @@ class Logs(BatchingCache):
              returns the request thread.
     """
 
-        all_params = ['resource', 'msg', 'timestamp', 'metadata']  # noqa: E501
+        all_params = ['resource', 'msg', 'timestamp','log_level', 'metadata']  # noqa: E501
         params = locals()
         for key, val in six.iteritems(params['kwargs']):
             if key not in all_params:
@@ -130,6 +130,8 @@ class Logs(BatchingCache):
                 logs['timestamp'] = kwargs['timestamp']
             if kwargs.__contains__('metadata'):
                 logs['metadata'] = kwargs['metadata']
+            if kwargs.__contains__('log_level'):
+                logs['log_level'] = kwargs['log_level']
             self.add_request(resource=copy.deepcopy(kwargs['resource']),
                              logs=logs)
         else:
@@ -196,6 +198,8 @@ class Logs(BatchingCache):
             logs['timestamp'] = kwargs['timestamp']
         if kwargs.__contains__('metadata'):
             logs['metadata'] = kwargs['metadata']
+        if kwargs.__contains__('log_level'):
+            logs['logl_evel'] = kwargs['log_level']
         body = []
         body.append(logs)
         # size limiting
