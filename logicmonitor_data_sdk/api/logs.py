@@ -199,7 +199,7 @@ class Logs(BatchingCache):
         if kwargs.__contains__('metadata'):
             logs['metadata'] = kwargs['metadata']
         if kwargs.__contains__('log_level'):
-            logs['logl_evel'] = kwargs['log_level']
+            logs['log_level'] = kwargs['log_level']
         body = []
         body.append(logs)
         # size limiting
