@@ -13,7 +13,7 @@ import logicmonitor_data_sdk
 from logicmonitor_data_sdk.api.logs import Logs
 from logicmonitor_data_sdk.models import Resource
 from logicmonitor_data_sdk.api.response_interface import ResponseInterface
-from example import system_properties
+from system_properties import get_system_info
 
 
 class MyResponse(ResponseInterface):
@@ -38,12 +38,12 @@ configuration = logicmonitor_data_sdk.Configuration(company='your_company',
 
 # The resource which is already present on LM Platform. Use a unique property to match
 # the resource and send log for that.
-resource = Resource(ids={"system.hostname": 'your_system'}, properties=system_properties.get_system_info())
+resource = Resource(ids={"system.hostname": 'your_system'}, properties=get_system_info())
 
 # Create an api handle for sending the logs
 # "batch" would club logs for 8MB size or 30 Sec - whichever is earlier. Its default is "True".
 log_api = Logs(batch=False)
 
-return_value = log_api.send_logs(resource=resource, msg="this is sample log")
+return_value = log_api.send_logs(resource=resource,log_level="INFO", msg="this is sample log")
 
 print(return_value)
